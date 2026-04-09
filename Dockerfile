@@ -44,9 +44,6 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # Switch to the non-privileged user to run the application.
 USER appuser
 
-# Force temp cache from now on
-ENV UV_CACHE_DIR=/tmp/.uv_cache
-
 # Expose the port that the application listens on.
 EXPOSE 7035
 
