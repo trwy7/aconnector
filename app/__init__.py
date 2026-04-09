@@ -9,7 +9,7 @@ limiter = Limiter(
     get_remote_address,
     app=app,
     default_limits=["200 per 2 minutes", "20 per 10 seconds"],
-    storage_uri="redis://acredis:6379",
+    storage_uri="memory://",
     storage_options={"socket_connect_timeout": 30},
     strategy="fixed-window"
 )

@@ -30,9 +30,5 @@
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
-pylintrc
 LICENSE
 README.md
-
-data/
-profanity.txt
