@@ -14,3 +14,7 @@ limiter = Limiter(
     strategy="fixed-window"
 )
 
+@app.route("/ping")
+@limiter.exempt
+def ping():
+    return "pong"
