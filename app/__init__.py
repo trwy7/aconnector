@@ -1,10 +1,21 @@
+import logging
+import os
+import importlib
 from flask import Flask, request, redirect
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
+# Init logger
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger("aconnector")
+
+# Init app
+logger.info("Starting AConnector")
 app = Flask(__name__, template_folder="pages", static_folder="static")
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data/db.sqlite3'
 
+## Init extensions
+logger.debug("Init extensions")
 limiter = Limiter(
     get_remote_address,
     app=app,
@@ -14,7 +25,15 @@ limiter = Limiter(
     strategy="fixed-window"
 )
 
-@app.route("/ping")
-@limiter.exempt
-def ping():
-    return "pong"
+logger.debug("Init routes...")
+# Import routes
+rdir = os.path.join(os.path.dirname(__file__), "routes")
+for root, _, files in os.walk(rdir):
+    for file in files:
+        if file.endswith(".py"):
+            fd = os.path.join(root, file) \
+                .replace(rdir, "app.routes") \
+                .replace(os.sep, ".") \
+                .replace(".py", "")
+            logger.debug("Init route %s", fd)
+            importlib.import_module(fd)

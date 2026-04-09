@@ -26,3 +26,6 @@ class Application(db.Model):
     owner = db.relationship('User', backref='apps')
     client_id = db.Column(db.String(40), primary_key=True)
     client_secret = db.Column(db.String(60), primary_key=True)
+
+with app.app_context():
+    db.create_all()
