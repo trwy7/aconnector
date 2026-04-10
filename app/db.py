@@ -15,11 +15,13 @@ class User(db.Model):
 
 class Token(db.Model):
     token = db.Column(db.String(60), primary_key=True)
+    user_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref='tokens')
     type = db.Column(db.String(5), nullable=False)
     expiry = db.Column(db.DateTime, nullable=False)
 
 class Application(db.Model):
+    owner_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
     owner = db.relationship('User', backref='apps')
     name = db.Column(db.String(80), unique=False, nullable=False)
     client_id = db.Column(db.String(20), primary_key=True)
