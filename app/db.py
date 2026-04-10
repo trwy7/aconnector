@@ -9,7 +9,6 @@ class User(db.Model):
     level = db.Column(db.Integer, default=1)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(80), unique=False, nullable=False)
-    email_verified = db.Column(db.Boolean, nullable=False, default=False)
     firstname = db.Column(db.String(80), unique=False, nullable=False)
     lastname = db.Column(db.String(80), unique=False, nullable=False)
     disabled = db.Column(db.Boolean, nullable=False, default=False)
