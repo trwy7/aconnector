@@ -12,7 +12,7 @@ logger = logging.getLogger("aconnector")
 # Init app
 logger.info("Starting AConnector")
 app = Flask(__name__, template_folder="pages", static_folder="static")
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data/db.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:////data/db.sqlite3'
 
 ## Init extensions
 logger.debug("Init extensions")

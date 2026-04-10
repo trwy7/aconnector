@@ -6,6 +6,6 @@ services:
     ports:
       - 7035:7035
     volumes:
-      - ./data:/app/data
+      - ./data:/data
     hostname: aconnector
     stop_signal: SIGINT
