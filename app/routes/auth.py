@@ -1,7 +1,7 @@
 import random
-from flask import render_template, request, url_for
+from flask import render_template, request, url_for, redirect
 from app import app, logger, limiter
-from app.db import User
+from app.db import User, db
 from app.utilities import email
 
 ev_list = {}
@@ -23,9 +23,29 @@ def login_post():
         lcode = random.randbytes(20).hex()
         login_list[lcode] = luser.id
         email.send(request.form['email'], f"Welcome back, {luser.username}!", f"Click this link to sign back in: {url_for("lastlogin", code=lcode)}")
-        return render_template("auth/welcomeback.html")
+        return render_template("auth/rlink.html", email=request.form['email'])
     else:
         logger.debug("[login] Sending register email to %s", request.form['email'])
-        ev_list[request.form['email']] = random.randint(100000, 999999)
+        if request.form['email'] not in ev_list:
+            ev_list[request.form['email']] = random.randint(100000, 999999)
         email.send(request.form['email'], f"Your {app.config['NAME']} resgistration code is {str(ev_list[request.form['email']])}", f"Your code is: {str(ev_list[request.form['email']])}\nIf you did not request this email, you may discard it.")
         return render_template("auth/requestcode.html", email=request.form['email'])
+
+@app.route("/register")
+def register_redir():
+    return redirect("/login")
+
+@app.route("/register", methods=['POST'])
+@limiter.limit("2 per 2 seconds")
+@limiter.limit("15 per minute")
+@limiter.limit("30 per hour")
+def register_post():
+    scode = ev_list.get(request.form['email'])
+    if not scode:
+        return redirect("/login")
+    if scode != int(request.form['code']):
+        return render_template("auth/requestcode.html", email=request.form['email'], status="Incorrect code")
+    luser = User.query.filter_by(email=request.form['email']).first()
+    if luser:
+        return "An account was already made with this email!"
+    return render_template("auth/finalsetup.html", email=request.form['email'], code=scode)

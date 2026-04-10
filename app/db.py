@@ -6,11 +6,10 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    level = db.Column(db.Integer, default=1)
+    level = db.Column(db.Integer, default=1) # 1=user, 5=admin
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(80), unique=False, nullable=False)
-    firstname = db.Column(db.String(80), unique=False, nullable=False)
-    lastname = db.Column(db.String(80), unique=False, nullable=False)
+    name = db.Column(db.String(80), unique=False, nullable=False)
     disabled = db.Column(db.Boolean, nullable=False, default=False)
 
 class Token(db.Model):
