@@ -1,11 +1,12 @@
-name: aconnector
 services:
-  aconnector:
+  authbridge:
     build:
       context: .
     ports:
       - 7035:7035
     volumes:
       - ./data:/data
-    hostname: aconnector
+    environment:
+      - APP_NAME=AuthBridge
+    hostname: authbridge
     stop_signal: SIGINT
