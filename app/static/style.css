@@ -37,6 +37,9 @@ main.hcenter, main:has(form) {
     align-items: center;
     text-align: center;
 }
+input {
+    text-align: center;
+}
 form > label {
     margin: 0.5rem
 }
