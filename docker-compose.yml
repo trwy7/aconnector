@@ -9,4 +9,3 @@ services:
       - ./data:/app/data
     hostname: aconnector
     stop_signal: SIGINT
-  

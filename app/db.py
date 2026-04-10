@@ -1,10 +1,8 @@
 from . import app
 import uuid
 from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
 
 db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
 
 class User(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
