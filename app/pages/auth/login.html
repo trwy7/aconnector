@@ -2,9 +2,9 @@
 {% block title %}Login{% endblock %}
 {% block content %}
 <h1>Welcome!</h1>
-<form method="post" style="width: 300px;">
+<form method="post" style="width: 300px;" onsubmit="document.getElementById('submit').disabled = true; document.getElementById('submit').innerText = 'Submitting...'">
     <label for="email"><b>Email</b></label>
     <input type="email" placeholder="example@example.com" name="email" required>
-    <input type="submit" value="Continue"></button>
+    <input type="submit" id="submit" value="Continue"></button>
 </form>
 {% endblock %}

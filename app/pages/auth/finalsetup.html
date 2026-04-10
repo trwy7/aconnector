@@ -1,0 +1,16 @@
+{% extends "templates/base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<h1>Final step</h1>
+<form action="finalregister" method="post" style="width: 400px;" onsubmit="document.getElementById('submit').disabled = true; document.getElementById('submit').innerText = 'Submitting...'">
+    <input type="email" value="{{email}}" name="email" required readonly hidden>
+    <input type="tel" value="{{code}}" name="code" required readonly hidden>
+    <label for="uname">Username</label>
+    <p style="font-size: 0.8em;">You cannot change this later</p>
+    <input type="text" pattern="[a-z0-9\-]*" maxlength="20" minlength="3" placeholder="aperson" name="uname" required>
+    <label for="uname">Display name</label>
+    <input type="text" pattern="[A-Za-z ]*" maxlength="40" minlength="3" placeholder="A Person" name="uname" required>
+    <input type="submit" id="submit" value="Continue" style="width: 150px;"></button>
+    <p>{{status}}</p>
+</form>
+{% endblock %}

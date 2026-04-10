@@ -49,3 +49,19 @@ def register_post():
     if luser:
         return "An account was already made with this email!"
     return render_template("auth/finalsetup.html", email=request.form['email'], code=scode)
+
+@app.route("/finalregister", methods=['POST'])
+@limiter.limit("2 per 2 seconds")
+@limiter.limit("15 per minute")
+@limiter.limit("30 per hour")
+def register_finalpost():
+    scode = ev_list.get(request.form['email'])
+    if not scode:
+        return redirect("/login")
+    if scode != int(request.form['code']):
+        return render_template("auth/requestcode.html", email=request.form['email'], status="Incorrect code")
+    luser = User.query.filter_by(email=request.form['email']).first()
+    if luser:
+        return "An account was already made with this email!"
+    
+    return render_template("auth/finalsetup.html", email=request.form['email'], code=scode, status="This name is already taken")

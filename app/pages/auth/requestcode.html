@@ -6,7 +6,7 @@
     <p>We sent a code to <!--email_off-->{{email}}<!--/email_off-->, enter it here.</p>
     <input type="email" value="{{email}}" name="email" required readonly hidden>
     <input type="tel" placeholder="123456" pattern="[0-9]*" maxlength="6" name="code" required style="width: 150px; letter-spacing: 0.3rem;">
-    <input type="submit" value="Continue" style="width: 125px;"></button>
+    <input type="submit" id="submit" value="Continue" style="width: 125px;"></button>
     <p>{{status}}</p>
 </form>
 {% endblock %}
