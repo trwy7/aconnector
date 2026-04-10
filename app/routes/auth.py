@@ -25,7 +25,7 @@ def login_post():
         email.send(request.form['email'], f"Welcome back, {luser.username}!", f"Click this link to sign back in: {url_for("lastlogin", code=lcode)}")
         return render_template("auth/welcomeback.html")
     else:
-        logger.debug("[login] Sending register email to " + request.form['email'])
+        logger.debug("[login] Sending register email to %s", request.form['email'])
         ev_list[request.form['email']] = random.randint(100000, 999999)
-        email.send(request.form['email'], f"Your {app.config['NAME']} resgistration code is {str(ev_list[request.form['email']])}", f"Your code is: {str(ev_list[request.form['email']])}")
+        email.send(request.form['email'], f"Your {app.config['NAME']} resgistration code is {str(ev_list[request.form['email']])}", f"Your code is: {str(ev_list[request.form['email']])}\nIf you did not request this email, you may discard it.")
         return render_template("auth/requestcode.html", email=request.form['email'])

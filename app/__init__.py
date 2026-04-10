@@ -7,12 +7,12 @@ from flask_limiter.util import get_remote_address
 
 # Init logger
 logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger("aconnector")
+logger = logging.getLogger("authbridge")
 
 # Init app
-logger.info("Starting AConnector")
+logger.info("Starting AuthBridge")
 app = Flask(__name__, template_folder="pages", static_folder="static")
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:////data/db.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////data/db.sqlite3'
 app.config['NAME'] = os.environ.get("APP_NAME", "AuthBridge")
 
 @app.context_processor

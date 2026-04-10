@@ -10,3 +10,4 @@ services:
       - APP_NAME=AuthBridge
     hostname: authbridge
     stop_signal: SIGINT
+    stop_grace_period: 1s
