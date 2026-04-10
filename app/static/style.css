@@ -1,2 +1,49 @@
-.header
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+* {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+header {
+    background-color: hsl(150, 10%, 24%);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    height: 40px;
+    text-shadow: 0px 0px 10px hsl(150, 4%, 10%);
+}
+header ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+}
+body {
+    font-family: 'Inter', 'Roboto', sans-serif;
+    color: rgb(198, 244, 223);
+    padding-top: 40px;
+    background-color: hsl(120, 4%, 10%);
+    margin: 0;
+}
+main {
+    display:flex;
+    padding: 5px;
+    flex-direction: column;
+}
+main.hcenter, main:has(form) {
+    justify-content: center;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+form {
+    padding-top: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+input {
+    text-align: center;
+}
 #loadOverlay {display: none;}
