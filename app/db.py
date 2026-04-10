@@ -22,8 +22,9 @@ class Token(db.Model):
 
 class Application(db.Model):
     owner = db.relationship('User', backref='apps')
-    client_id = db.Column(db.String(40), primary_key=True)
-    client_secret = db.Column(db.String(60), primary_key=True)
+    name = db.Column(db.String(80), unique=False, nullable=False)
+    client_id = db.Column(db.String(20), primary_key=True)
+    client_secret = db.Column(db.String(80))
 
 with app.app_context():
     db.create_all()
