@@ -25,6 +25,9 @@ class Application(db.Model):
     name = db.Column(db.String(80), unique=False, nullable=False)
     client_id = db.Column(db.String(20), primary_key=True)
     client_secret = db.Column(db.String(80))
+    redirect_url = db.Column(db.String(200))
+    launch_url = db.Column(db.String(200))
+    custom_attrs = db.Column(db.JSON)
 
 with app.app_context():
     db.create_all()
