@@ -13,6 +13,11 @@ logger = logging.getLogger("aconnector")
 logger.info("Starting AConnector")
 app = Flask(__name__, template_folder="pages", static_folder="static")
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:////data/db.sqlite3'
+app.config['NAME'] = os.environ.get("APP_NAME", "AuthBridge")
+
+@app.context_processor
+def add_conf():
+    return {"gconfig": app.config}
 
 ## Init extensions
 logger.debug("Init extensions")
