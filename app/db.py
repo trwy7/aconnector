@@ -57,7 +57,6 @@ class App(db.Model):
     launch_url = db.Column(db.String(200))
     scopes = db.Column(db.Text)
     custom_attrs = db.Column(db.JSON)
-    featured = db.Column(db.Boolean, nullable=False, default=False)
     user_auths = db.relationship("User", secondary=user_app_association, back_populates="app_auths")
 
 with app.app_context():

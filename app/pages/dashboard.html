@@ -2,12 +2,16 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 <h1>Hello, {{user.name}}!</h1>
+{% if user.app_auths | length > 0 %}
 <h2>Apps</h2>
-<div>
-
+<div id="apps">
+    {% for app in user.app_auths %}
+        <a class="app" href="{{app.launch_url}}">
+            <span class="appname">{{app.name}}</span>
+        </a>
+    {% endfor %}
 </div>
-<h2>Featured</h2>
-<div>
-
-</div>
+{% else %}
+<p>You have not used any apps yet.</p>
+{% endif %}
 {% endblock %}

@@ -26,7 +26,7 @@ def login_post():
     else:
         # TODO: Email regex
         logger.debug("[login] Sending register email to %s", request.form['email'])
-        if request.form['email'] not in ev_list:
+        if request.form['email'] not in ev_list: # FIXME: add code expiry
             ev_list[request.form['email']] = random.randint(100000, 999999)
         email.send(request.form['email'], f"Your {app.config['NAME']} resgistration code is {str(ev_list[request.form['email']])}", f"Your code is: {str(ev_list[request.form['email']])}\nIf you did not request this email, you may discard it.")
         return render_template("auth/requestcode.html", email=request.form['email'])

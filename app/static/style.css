@@ -33,6 +33,19 @@ body {
     background-color: hsl(120, 3%, 7%);
     margin: 0;
 }
+#apps {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
+  gap:20px;
+}
+.app {
+    background-color: hsl(147, 9%, 20%);
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+a.app:hover {
+    background-color: hsl(150, 11%, 36%);
+}
 main {
     display:flex;
     padding: 5px;
