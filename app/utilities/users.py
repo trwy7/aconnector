@@ -1,3 +1,4 @@
+from functools import wraps
 from datetime import datetime
 from flask import request, abort
 from app.db import Token
@@ -11,6 +12,7 @@ def get_user():
     return None, None
 
 def require_user(func):
+    @wraps
     def wrapper(*args, **kwargs):
         if not request.user:
             return abort(401)
