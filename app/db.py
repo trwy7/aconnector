@@ -39,7 +39,7 @@ class Token(db.Model):
     user = db.relationship('User', backref='tokens')
     expiry = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now() + timedelta(weeks=6))
 
-class Application(db.Model):
+class App(db.Model):
     owner_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
     owner = db.relationship('User', backref='apps')
     name = db.Column(db.String(80), unique=False, nullable=False)
@@ -48,6 +48,14 @@ class Application(db.Model):
     redirect_url = db.Column(db.String(200))
     launch_url = db.Column(db.String(200))
     custom_attrs = db.Column(db.JSON)
+    featured = db.Column(db.Boolean, nullable=False, default=False)
+
+user_app_association = db.Table(
+    "user_app_link",
+    db.Model.metadata,
+    db.Column("user_id", db.ForeignKey('user.id'), primary_key=True),
+    db.Column("app_id", db.ForeignKey('app.id'), primary_key=True)
+)
 
 with app.app_context():
     db.create_all()
