@@ -1,23 +1,43 @@
-from . import app
+from . import app, logger
 import uuid
+import random
+from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    level = db.Column(db.Integer, default=1) # 1=user, 5=admin
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    level = db.Column(db.Integer, default=0) # 0=user, 3=superadmin
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     name = db.Column(db.String(40), nullable=False)
     disabled = db.Column(db.Boolean, nullable=False, default=False)
+    @staticmethod
+    def create(email: str, username: str, name: str):
+        logger.debug("[db] creating user %s", username)
+        usr = User(
+            email=email,
+            username=username,
+            name=name,
+            level=0 if email != app.config['OWNER_EMAIL'] else 3
+        )
+        db.session.add(usr)
+        db.session.commit()
+        return usr
+    def create_token(self):
+        logger.debug("[db] creating token for %s", self.username)
+        usr = Token(user=self)
+        db.session.add(usr)
+        db.session.commit()
+        return usr
 
 class Token(db.Model):
-    token = db.Column(db.String(60), primary_key=True)
+    token = db.Column(db.String(60), primary_key=True, default=lambda: random.randbytes(30).hex())
     user_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref='tokens')
-    type = db.Column(db.String(5), nullable=False)
-    expiry = db.Column(db.DateTime, nullable=False)
+    expiry = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now() + timedelta(weeks=6))
 
 class Application(db.Model):
     owner_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)

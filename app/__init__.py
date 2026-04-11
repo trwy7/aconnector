@@ -14,6 +14,7 @@ logger.info("Starting AuthBridge")
 app = Flask(__name__, template_folder="pages", static_folder="static")
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////data/db.sqlite3'
 app.config['NAME'] = os.environ.get("APP_NAME", "AuthBridge")
+app.config['OWNER_EMAIL'] = os.environ.get("OWNER_EMAIL", "")
 
 @app.context_processor
 def add_conf():
