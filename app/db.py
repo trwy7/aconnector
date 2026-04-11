@@ -6,6 +6,13 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy(app)
 
+user_app_association = db.Table(
+    "user_app_link",
+    db.Model.metadata,
+    db.Column("user_id", db.ForeignKey('user.id'), primary_key=True),
+    db.Column("app_id", db.ForeignKey('app.client_id'), primary_key=True)
+)
+
 class User(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
@@ -14,6 +21,7 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     name = db.Column(db.String(40), nullable=False)
     disabled = db.Column(db.Boolean, nullable=False, default=False)
+    authed = db.relationship("App", secondary=user_app_association, backref="authed")
     @staticmethod
     def create(email: str, username: str, name: str):
         logger.debug("[db] creating user %s", username)
@@ -49,13 +57,7 @@ class App(db.Model):
     launch_url = db.Column(db.String(200))
     custom_attrs = db.Column(db.JSON)
     featured = db.Column(db.Boolean, nullable=False, default=False)
-
-user_app_association = db.Table(
-    "user_app_link",
-    db.Model.metadata,
-    db.Column("user_id", db.ForeignKey('user.id'), primary_key=True),
-    db.Column("app_id", db.ForeignKey('app.id'), primary_key=True)
-)
+    authed = db.relationship("User", secondary=user_app_association, backref="authed")
 
 with app.app_context():
     db.create_all()
