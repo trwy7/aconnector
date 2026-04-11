@@ -12,7 +12,7 @@ def get_user():
     return None, None
 
 def require_user(func):
-    @wraps
+    @wraps(func)
     def wrapper(*args, **kwargs):
         if not request.user:
             return abort(401)

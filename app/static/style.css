@@ -87,18 +87,21 @@ textarea {
     color: rgb(198, 244, 223);
 }
 button,
-input[type="submit"] {
-  margin: 0.5rem;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding: 7px;
-  border-radius: 5px;
-  background-color: hsl(120, 8%, 23%);
-  color: rgb(198, 244, 223);
-  cursor: pointer;
-  transition: background-color 0.3s;
-  border: 2px solid hsl(120, 8%, 31%);
-  min-width: 100px;
+input[type="submit"],
+a.fakebutton {
+    margin: 0.5rem;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 7px;
+    border-radius: 5px;
+    background-color: hsl(120, 8%, 23%);
+    color: rgb(198, 244, 223);
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: 2px solid hsl(120, 8%, 31%);
+    min-width: 100px;
+    text-decoration: none;
+    width: fit-content;
 }
 button:hover {
   background-color: hsl(120, 13%, 33%);
