@@ -21,7 +21,7 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     name = db.Column(db.String(40), nullable=False)
     disabled = db.Column(db.Boolean, nullable=False, default=False)
-    authed = db.relationship("App", secondary=user_app_association, backref="authed")
+    app_auths = db.relationship("App", secondary=user_app_association, back_populates="user_auths")
     @staticmethod
     def create(email: str, username: str, name: str):
         logger.debug("[db] creating user %s", username)
@@ -57,7 +57,7 @@ class App(db.Model):
     launch_url = db.Column(db.String(200))
     custom_attrs = db.Column(db.JSON)
     featured = db.Column(db.Boolean, nullable=False, default=False)
-    authed = db.relationship("User", secondary=user_app_association, backref="authed")
+    user_auths = db.relationship("User", secondary=user_app_association, back_populates="app_auths")
 
 with app.app_context():
     db.create_all()
