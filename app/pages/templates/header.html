@@ -1,7 +1,11 @@
 <header>
     <ul>
+        {% if user %}
         <li>Dashboard</li>
         <li>My apps</li>
         <li>Account</li>
+        {% else %}
+        <li><a href="/login">Login</a></li>
+        {% endif %}
     </ul>
 </header>

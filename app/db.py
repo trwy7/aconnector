@@ -55,6 +55,7 @@ class App(db.Model):
     client_secret = db.Column(db.String(80))
     redirect_url = db.Column(db.String(200))
     launch_url = db.Column(db.String(200))
+    scopes = db.Column(db.Text)
     custom_attrs = db.Column(db.JSON)
     featured = db.Column(db.Boolean, nullable=False, default=False)
     user_auths = db.relationship("User", secondary=user_app_association, back_populates="app_auths")

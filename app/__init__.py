@@ -1,7 +1,7 @@
 import logging
 import os
 import importlib
-from flask import Flask, request, redirect
+from flask import Flask, request
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
@@ -16,9 +16,15 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////data/db.sqlite3'
 app.config['NAME'] = os.environ.get("APP_NAME", "AuthBridge")
 app.config['OWNER_EMAIL'] = os.environ.get("OWNER_EMAIL", "")
 
+from .utilities import users
+@app.before_request
+def auth():
+    request.user, request.token = users.get_user()
+
 @app.context_processor
 def add_conf():
-    return {"gconfig": app.config}
+
+    return {"gconfig": app.config, "user": request.user, "token": request.token}
 
 ## Init extensions
 logger.debug("Init extensions")
