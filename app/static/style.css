@@ -23,6 +23,8 @@ header ul {
 }
 header ul li a {
     cursor: pointer;
+    text-decoration: none;
+    color: rgb(198, 244, 223);
 }
 body {
     font-family: 'Inter', 'Roboto', sans-serif;
