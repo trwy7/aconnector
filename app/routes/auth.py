@@ -47,7 +47,7 @@ def login_tokpost(token):
         httponly=True,
         samesite="Lax",
         secure=True,
-        max_age=2419200,
+        max_age=2419200
     )
     return rs
 
@@ -95,6 +95,19 @@ def register_finalpost():
         httponly=True,
         samesite="Lax",
         secure=True,
-        max_age=2419200,
+        max_age=2419200
+    )
+    return rs
+
+@app.route("/logout")
+def logout_route():
+    rs = redirect("/login")
+    rs.set_cookie(
+        "abridgetoken",
+        "none",
+        httponly=True,
+        samesite="Lax",
+        secure=False,
+        max_age=0
     )
     return rs
