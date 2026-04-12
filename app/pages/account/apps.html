@@ -2,11 +2,11 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 <h1>Your Apps</h1>
-<a class="fakebutton" href="/app/create" style="width: 150px;">Create app</a>
+<a class="fakebutton" href="/apps/create">Create app</a>
 {% if user.apps | length > 0 %}
 <div id="apps">
     {% for app in user.apps %}
-        <a class="app" href="/apps/{{app.client_id}}">
+        <a class="app" href="/app/{{app.client_id}}">
             <span class="appname">{{app.name}}</span>
             <span class="appusers">{{app.user_auths | length}} users</span>{# this might be slow, but I havent tested it #}
         </a>

@@ -51,13 +51,23 @@ class App(db.Model):
     owner_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
     owner = db.relationship('User', backref='apps')
     name = db.Column(db.String(80), unique=False, nullable=False)
-    client_id = db.Column(db.String(20), primary_key=True)
-    client_secret = db.Column(db.String(80))
-    redirect_url = db.Column(db.String(200))
-    launch_url = db.Column(db.String(200))
-    scopes = db.Column(db.Text)
-    custom_attrs = db.Column(db.JSON)
+    client_id = db.Column(db.String(20), primary_key=True, default=lambda: random.randbytes(10).hex())
+    client_secret = db.Column(db.String(80), default=lambda: random.randbytes(40).hex())
+    redirect_url = db.Column(db.String(200), default="https://example.com/oidc/redirect")
+    launch_url = db.Column(db.String(200), default="https://example.com/login/oidc")
+    scopes = db.Column(db.Text, default="username,email")
+    custom_attrs = db.Column(db.JSON, default=lambda: {})
     user_auths = db.relationship("User", secondary=user_app_association, back_populates="app_auths")
+    @staticmethod
+    def create(owner: User, name: str):
+        logger.debug("[db] creating app for %s", owner.username)
+        capp = App(
+            owner=owner,
+            name=name
+        )
+        db.session.add(capp)
+        db.session.commit()
+        return capp
 
 with app.app_context():
     db.create_all()
