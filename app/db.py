@@ -13,6 +13,9 @@ user_app_association = db.Table(
     db.Column("app_id", db.ForeignKey('app.client_id'), primary_key=True)
 )
 
+username_regex = re.compile(r"[a-z0-9\-]{3,20}")
+name_regex = re.compile(r"[A-Za-z ]{3,40}")
+
 class User(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
@@ -25,6 +28,10 @@ class User(db.Model):
     @staticmethod
     def create(email: str, username: str, name: str):
         logger.debug("[db] creating user %s", username)
+        if not re.fullmatch(username_regex, username):
+            return False # Should just error the bad request
+        if not re.fullmatch(name_regex, name):
+            return False # Should just error the bad request
         usr = User(
             email=email,
             username=username,
