@@ -1,4 +1,5 @@
 from . import app, logger
+import re
 import uuid
 import random
 from datetime import datetime, timedelta
@@ -27,10 +28,12 @@ class User(db.Model):
     app_auths = db.relationship("App", secondary=user_app_association, back_populates="user_auths")
     @staticmethod
     def create(email: str, username: str, name: str):
-        logger.debug("[db] creating user %s", username)
         if not re.fullmatch(username_regex, username):
+            logger.debug("[db] rejecting invalid username")
             return False # Should just error the bad request
+        logger.debug("[db] creating user %s", username)
         if not re.fullmatch(name_regex, name):
+            logger.debug("[db] name for %s failed verification", username)
             return False # Should just error the bad request
         usr = User(
             email=email,
@@ -68,6 +71,9 @@ class App(db.Model):
     @staticmethod
     def create(owner: User, name: str):
         logger.debug("[db] creating app for %s", owner.username)
+        if not re.fullmatch(name_regex, name):
+            logger.debug("[db] app for %s failed name verification", owner.username)
+            return False # Should just error the bad request
         capp = App(
             owner=owner,
             name=name
