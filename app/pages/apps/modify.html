@@ -3,7 +3,7 @@
 {% block content %}
 <h1>Modify {{app.name}}</h1>
 <p>The client ID is {{app.client_id}}</p>
-<form action="/app/{{app.client_id}}/reroll" method="post">
+<form action="/app/{{app.client_id}}/rerollsecret" method="post">
     <input type="submit" id="submit" value="Regenerate client secret">
 </form>
 <form method="post" onsubmit="document.getElementById('submit').disabled = true; document.getElementById('submit').innerText = 'Submitting...'">

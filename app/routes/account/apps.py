@@ -22,3 +22,10 @@ def create_app_page():
 def modify_app_page(clientid):
     ca = App.query.get(clientid)
     return render_template("apps/modify.html", app=ca)
+
+@app.route("/app/<string:clientid>/rerollsecret", methods=["POST"])
+@require_user
+def reroll_app_secret(clientid):
+    ca = App.query.get(clientid)
+    ca.reroll_secret()
+    return render_template("apps/reroll.html", app=ca)

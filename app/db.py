@@ -80,6 +80,11 @@ class App(db.Model):
         db.session.add(capp)
         db.session.commit()
         return capp
+    def reroll_secret(self):
+        logger.debug("[db] rerolling secret for %s (%s)", self.name, self.client_id)
+        self.client_secret = random.randbytes(40).hex()
+        db.session.commit()
+        return self
 
 with app.app_context():
     db.create_all()

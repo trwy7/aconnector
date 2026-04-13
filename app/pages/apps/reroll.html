@@ -1,0 +1,8 @@
+{% extends "templates/base.html" %}
+{% block title %}Reroll secret for app{% endblock %}
+{% block mainclasses %}hcenter{% endblock %}
+{% block content %}
+<h1>Reroll {{app.name}} client secret</h1>
+<p>The new secret is:<br>{{app.client_secret}}</p>
+<a class="fakebutton" href="/app/{{app.client_id}}">Back</a>
+{% endblock %}
