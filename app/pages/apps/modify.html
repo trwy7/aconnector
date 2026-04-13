@@ -1,0 +1,20 @@
+{% extends "templates/base.html" %}
+{% block title %}Modify app{% endblock %}
+{% block content %}
+<h1>Modify {{app.name}}</h1>
+<p>The client ID is {{app.client_id}}</p>
+<form action="/app/{{app.client_id}}/reroll" method="post">
+    <input type="submit" id="submit" value="Regenerate client secret">
+</form>
+<form method="post" style="width: 300px;" onsubmit="document.getElementById('submit').disabled = true; document.getElementById('submit').innerText = 'Submitting...'">
+    <label for="name"><b>Name</b></label>
+    <input type="text" placeholder="My app" value="{{app.name}}" name="name" required>
+    <label for="redir"><b>Redirect URL</b></label>
+    <input type="text" placeholder="https://example.com/oidc/redirect" maxlength="200" value="{{app.redirect_url}}" name="redir" required>
+    <label for="launch"><b>Launch URL</b></label>
+    <input type="text" placeholder="https://example.com/login" maxlength="200" value="{{app.launch_url}}" name="launch" required>
+    <label for="scopes"><b>Scopes</b></label>
+    <input type="text" placeholder="https://example.com/login" maxlength="200" value="{{app.launch_url}}" name="launch" required>
+    <input type="submit" id="submit" value="Continue">
+</form>
+{% endblock %}

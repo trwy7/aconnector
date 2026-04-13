@@ -66,7 +66,6 @@ class App(db.Model):
     redirect_url = db.Column(db.String(200), default="https://example.com/oidc/redirect")
     launch_url = db.Column(db.String(200), default="https://example.com/login/oidc")
     scopes = db.Column(db.Text, default="username,email")
-    custom_attrs = db.Column(db.JSON, default=lambda: {})
     user_auths = db.relationship("User", secondary=user_app_association, back_populates="app_auths")
     @staticmethod
     def create(owner: User, name: str):

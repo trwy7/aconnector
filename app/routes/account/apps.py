@@ -13,6 +13,6 @@ def apps_page():
 def create_app_page():
     da = App.create(
         request.user,
-        "New app"
+        "My new app"
     )
     return redirect(f"/app/{da.client_id}")
