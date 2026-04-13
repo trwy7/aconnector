@@ -3,6 +3,8 @@ from app import app
 from app.db import App
 from app.utilities.users import require_user
 
+# FIXME: enforce permissions
+
 @app.route("/apps")
 @require_user
 def apps_page():
@@ -21,6 +23,17 @@ def create_app_page():
 @require_user
 def modify_app_page(clientid):
     ca = App.query.get(clientid)
+    return render_template("apps/modify.html", app=ca)
+
+@app.route("/app/<string:clientid>", methods=["POST"])
+@require_user
+def modify_app(clientid):
+    ca = App.query.get(clientid)
+    ca.edit(
+        name=request.form['name'],
+        redirect_url=request.form['redir'],
+        launch_url=request.form['launch']
+    )
     return render_template("apps/modify.html", app=ca)
 
 @app.route("/app/<string:clientid>/rerollsecret", methods=["POST"])

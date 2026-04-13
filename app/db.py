@@ -85,6 +85,16 @@ class App(db.Model):
         self.client_secret = random.randbytes(40).hex()
         db.session.commit()
         return self
+    def edit(self, name: str=None, redirect_url: str=None, launch_url: str=None):
+        logger.debug("[db] editing details for %s (%s)", self.name, self.client_id)
+        if name:
+            self.name = name
+        if redirect_url:
+            self.redirect_url = redirect_url
+        if launch_url:
+            self.launch_url = launch_url
+        db.session.commit()
+        return self
 
 with app.app_context():
     db.create_all()
