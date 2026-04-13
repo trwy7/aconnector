@@ -6,15 +6,13 @@
 <form action="/app/{{app.client_id}}/reroll" method="post">
     <input type="submit" id="submit" value="Regenerate client secret">
 </form>
-<form method="post" style="width: 300px;" onsubmit="document.getElementById('submit').disabled = true; document.getElementById('submit').innerText = 'Submitting...'">
+<form method="post" onsubmit="document.getElementById('submit').disabled = true; document.getElementById('submit').innerText = 'Submitting...'">
     <label for="name"><b>Name</b></label>
-    <input type="text" placeholder="My app" value="{{app.name}}" name="name" required>
+    <input type="text" placeholder="My app" value="{{app.name}}" maxlength="80" name="name" required>
     <label for="redir"><b>Redirect URL</b></label>
-    <input type="text" placeholder="https://example.com/oidc/redirect" maxlength="200" value="{{app.redirect_url}}" name="redir" required>
+    <input type="text" placeholder="https://example.com/oidc/redirect" maxlength="200" value="{{app.redirect_url}}" name="redir" style="width: 500px;" required>
     <label for="launch"><b>Launch URL</b></label>
-    <input type="text" placeholder="https://example.com/login" maxlength="200" value="{{app.launch_url}}" name="launch" required>
-    <label for="scopes"><b>Scopes</b></label>
-    <input type="text" placeholder="https://example.com/login" maxlength="200" value="{{app.launch_url}}" name="launch" required>
+    <input type="text" placeholder="https://example.com/login" maxlength="200" value="{{app.launch_url}}" name="launch" style="width: 500px;" required>
     <input type="submit" id="submit" value="Continue">
 </form>
 {% endblock %}

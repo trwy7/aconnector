@@ -21,7 +21,7 @@ def login_post():
         logger.debug("[login] Found user for %s: %s. Sending email...", request.form['email'], luser.username)
         lcode = random.randbytes(20).hex()
         login_list[lcode] = luser.id
-        email.send(request.form['email'], f"Welcome back, {luser.username}!", f"Click this link to sign back in: {url_for("login_tokpost", token=lcode, _external=True)}")
+        email.send(request.form['email'], f"Welcome back, {luser.username}!", f"Click this link to sign back in: {url_for("login_tokpost", token=lcode, _external=True, _scheme="https")}")
         return render_template("auth/rlink.html", email=request.form['email'])
     else:
         # TODO: Email regex

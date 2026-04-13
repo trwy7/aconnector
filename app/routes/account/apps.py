@@ -16,3 +16,9 @@ def create_app_page():
         "My new app"
     )
     return redirect(f"/app/{da.client_id}")
+
+@app.route("/app/<string:clientid>")
+@require_user
+def modify_app_page(clientid):
+    ca = App.query.get(clientid)
+    return render_template("apps/modify.html", app=ca)
