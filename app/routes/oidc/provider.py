@@ -8,6 +8,7 @@ from flask import jsonify, redirect, request
 
 from app import app
 from app.db import App, User, db
+from app.utilities.users import require_user
 
 AUTH_CODE_TTL_SECONDS = 120
 ACCESS_TOKEN_TTL_SECONDS = 600
@@ -72,6 +73,7 @@ def _build_id_token(client: App, user: User, nonce: str | None = None):
 
 
 @app.route("/apps/auth")
+@require_user
 def auth_oidc_page():
     _purge_expired()
     # FIXME: This seems to be implicit
