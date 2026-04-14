@@ -7,8 +7,8 @@
 <div id="apps">
     {% for app in user.app_auths %}
         <a class="app" href="{{app.launch_url}}">
-            <span class="appname">{{app.name}}</span>
-            <span class="appcreator">Made by {{app.owner.username}}</span>
+            <span class="main">{{app.name}}</span><br>
+            <span class="secondary">Made by {{app.owner.username}}</span>
         </a>
     {% endfor %}
 </div>

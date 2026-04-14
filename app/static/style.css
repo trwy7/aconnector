@@ -21,7 +21,7 @@ header ul {
     margin: 10px;
     gap: 15px;
 }
-header ul li a {
+a {
     cursor: pointer;
     text-decoration: none;
     color: rgb(198, 244, 223);
@@ -42,13 +42,21 @@ body {
     background-color: hsl(147, 9%, 20%);
     transition: background-color 0.2s;
     cursor: pointer;
+    border-radius: 5px;
+    padding: 15px;
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.app > .secondary {
+    font-size: .8em;
 }
 a.app:hover {
     background-color: hsl(150, 11%, 36%);
 }
 main {
     display:flex;
-    padding: 5px;
+    padding: 16px;
     flex-direction: column;
 }
 main.hcenter, main:has(form) {
