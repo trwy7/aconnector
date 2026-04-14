@@ -8,5 +8,5 @@ def app_oidcconf(clientid):
         "authorization_endpoint": f"https://{request.host}/apps/auth",
         "token_endpoint": f"https://{request.host}/apps/token",
         "userinfo_endpoint": f"https://{request.host}/apps/token",
-        "jwks_uri": f"https://{request.host}/apps/jwks" # Authentik uses the client id in this, we may need to also.
+        "jwks_uri": f"https://{request.host}/apps/jwks" # Authentik uses the client id in this, we may also need to if apps do not send the id themselves.
     }
