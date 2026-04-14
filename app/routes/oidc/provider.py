@@ -2,12 +2,12 @@ import binascii
 import secrets
 from datetime import datetime, timedelta, UTC
 from urllib.parse import urlencode
-
+from base64 import b64decode
 from authlib.jose import jwt
 from flask import jsonify, redirect, request
 
 from app import app
-from app.db import App, User
+from app.db import App, User, db
 
 AUTH_CODE_TTL_SECONDS = 120
 ACCESS_TOKEN_TTL_SECONDS = 600
@@ -42,8 +42,6 @@ def _client_authenticate(client: App):
     auth_header = request.headers.get("Authorization", "")
     if auth_header.startswith("Basic "):
         try:
-            from base64 import b64decode
-
             raw = b64decode(auth_header.split(" ", 1)[1]).decode("utf-8")
             cid, csecret = raw.split(":", 1)
             return secrets.compare_digest(cid, client.client_id) and secrets.compare_digest(csecret, client.client_secret)
@@ -76,7 +74,7 @@ def _build_id_token(client: App, user: User, nonce: str | None = None):
 @app.route("/apps/auth")
 def auth_oidc_page():
     _purge_expired()
-
+    # FIXME: This seems to be implicit
     client_id = request.args.get("client_id")
     redirect_uri = request.args.get("redirect_uri")
     state = request.args.get("state")
@@ -113,8 +111,6 @@ def auth_oidc_page():
         "nonce": request.args.get("nonce"),
         "exp": _now() + timedelta(seconds=AUTH_CODE_TTL_SECONDS),
     }
-
-    from app.db import db
 
     db.session.commit()
     return redirect(f"{redirect_uri}?{urlencode({'code': code, 'state': state} if state else {'code': code})}")
