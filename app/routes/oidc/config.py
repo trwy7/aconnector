@@ -13,6 +13,6 @@ def app_oidcconf(clientid):
         "response_types_supported": ["code"],
         "grant_types_supported": ["authorization_code"],
         "subject_types_supported": ["public"],
-        "id_token_signing_alg_values_supported": ["HS256"],
+        "id_token_signing_alg_values_supported": ["HS256", "RS256"],
         "token_endpoint_auth_methods_supported": ["client_secret_post", "client_secret_basic"],
     }
