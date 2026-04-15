@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, UTC
 from urllib.parse import urlencode
 from base64 import b64decode
 from authlib.jose import JsonWebKey, jwt
-from flask import jsonify, redirect, request
+from flask import jsonify, redirect, request, render_template
 
 from app import app, logger
 from app.db import App, User, db
@@ -156,8 +156,10 @@ def auth_oidc_page():
         return _oidc_error_redirect(redirect_uri, "login_required", state)
 
     if request.user not in client.user_auths:
-        logger.debug("[oidc] granting user=%s access to client_id=%s", request.user.username, client.client_id)
-        client.user_auths.append(request.user)
+        logger.debug("[oidc] requesting user=%s access to client_id=%s", request.user.username, client.client_id)
+        return render_template("apps/auth.html", app=client)
+
+    logger.debug("[oidc] user=%s is re-accessing client_id=%s", request.user.username, client.client_id)
 
     code = secrets.token_urlsafe(32)
     auth_codes[code] = {
@@ -170,10 +172,70 @@ def auth_oidc_page():
         "exp": _now() + timedelta(seconds=AUTH_CODE_TTL_SECONDS),
     }
 
-    db.session.commit()
+    #db.session.commit()
     logger.info("[oidc] issued authorization code for user=%s client_id=%s", request.user.username, client.client_id)
     return redirect(f"{redirect_uri}?{urlencode({'code': code, 'state': state} if state else {'code': code})}")
 
+@app.route("/apps/auth", methods=['POST'])
+@require_user
+def auth_oidc_post():
+    _purge_expired()
+    # FIXME: This seems to be implicit
+    client_id = request.args.get("client_id")
+    redirect_uri = request.args.get("redirect_uri")
+    state = request.args.get("state")
+    scope = request.args.get("scope", "")
+
+    logger.info("[oidc] authorization request client_id=%s scope=%s response_type=%s", client_id, scope, request.args.get("response_type"))
+
+    client = App.query.get(client_id) if client_id else None
+    if not client:
+        logger.warning("[oidc] unknown client_id=%s", client_id)
+        return jsonify({"error": "invalid_client"}), 400
+
+    if redirect_uri != client.redirect_url:
+        logger.warning("[oidc] redirect_uri mismatch client_id=%s", client.client_id)
+        return jsonify({"error": "invalid_request", "error_description": "redirect_uri mismatch"}), 400
+
+    if request.args.get("response_type") != "code":
+        logger.warning("[oidc] unsupported response_type for client_id=%s", client.client_id)
+        return _oidc_error_redirect(redirect_uri, "unsupported_response_type", state)
+
+    requested_scopes = set(scope.split()) if scope else set()
+    if "openid" not in requested_scopes:
+        logger.warning("[oidc] missing openid scope for client_id=%s", client.client_id)
+        return _oidc_error_redirect(redirect_uri, "invalid_scope", state)
+    if "offline_access" in requested_scopes:
+        logger.warning("[oidc] offline_access requested but unsupported client_id=%s", client.client_id)
+        return _oidc_error_redirect(redirect_uri, "invalid_scope", state)
+
+    id_token_alg = _resolve_id_token_alg(client)
+    if not id_token_alg:
+        return _oidc_error_redirect(redirect_uri, "invalid_request", state)
+
+    if not request.user:
+        logger.info("[oidc] login required client_id=%s", client.client_id)
+        return _oidc_error_redirect(redirect_uri, "login_required", state)
+
+    if request.user not in client.user_auths:
+        logger.debug("[oidc] granted user=%s access to client_id=%s", request.user.username, client.client_id)
+        client.user_auths.append(request.user)
+        db.session.commit()
+
+
+    code = secrets.token_urlsafe(32)
+    auth_codes[code] = {
+        "client_id": client.client_id,
+        "user_id": request.user.id,
+        "redirect_uri": redirect_uri,
+        "scope": " ".join(sorted(requested_scopes)),
+        "nonce": request.args.get("nonce"),
+        "id_token_alg": id_token_alg,
+        "exp": _now() + timedelta(seconds=AUTH_CODE_TTL_SECONDS),
+    }
+
+    logger.info("[oidc] issued authorization code for user=%s client_id=%s", request.user.username, client.client_id)
+    return redirect(f"{redirect_uri}?{urlencode({'code': code, 'state': state} if state else {'code': code})}")
 
 @app.route("/apps/token", methods=["POST"])
 def token_oidc_page():
@@ -218,15 +280,13 @@ def token_oidc_page():
     id_token_alg = code_data.get("id_token_alg", "RS256")
     id_token = _build_id_token(client, user, code_data.get("nonce"), id_token_alg)
     logger.info("[oidc] issued tokens for user=%s client_id=%s id_token_alg=%s", user.username, client.client_id, id_token_alg)
-    return jsonify(
-        {
-            "access_token": access_token,
-            "token_type": "Bearer",
-            "expires_in": ACCESS_TOKEN_TTL_SECONDS,
-            "id_token": id_token,
-            "scope": code_data["scope"],
-        }
-    )
+    return jsonify({
+        "access_token": access_token,
+        "token_type": "Bearer",
+        "expires_in": ACCESS_TOKEN_TTL_SECONDS,
+        "id_token": id_token,
+        "scope": code_data["scope"],
+    })
 
 
 @app.route("/apps/userinfo")
