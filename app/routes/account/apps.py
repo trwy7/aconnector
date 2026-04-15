@@ -23,7 +23,7 @@ def create_app_page():
 @require_user
 def modify_app_page(clientid):
     ca = App.query.get(clientid)
-    return render_template("apps/modify.html", app=ca)
+    return render_template("apps/modify.html", app=ca, host=request.host)
 
 @app.route("/app/<string:clientid>", methods=["POST"])
 @require_user

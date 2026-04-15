@@ -3,6 +3,12 @@
 {% block content %}
 <h1>Modify {{app.name}}</h1>
 <p>The client ID is {{app.client_id}}</p>
+<p>The issuer URL is https://{{host}}/app/{{app.client_id}}</p>
+<p>The auth endpoint is https://{{host}}/apps/auth</p>
+<p>The token endpoint is https://{{host}}/apps/token</p>
+<p>The userinfo endpoint is https://{{host}}/apps/userinfo</p>
+<p>The JWKS endpoint is https://{{host}}/apps/jwks</p>
+<p>Your app may only need some of the above information.</p>
 <form action="/app/{{app.client_id}}/rerollsecret" method="post">
     <input type="submit" id="submit" value="Regenerate client secret">
 </form>
