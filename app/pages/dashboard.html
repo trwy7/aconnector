@@ -2,8 +2,9 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 <h1>Hello, {{user.name}}!</h1>
+<p>This is a demo build, congrats on logging in. If you want to test authenticating against an application, create an app here, go to https://oidcdebugger.com, and test the flow out.</p>
 {% if user.app_auths | length > 0 %}
-<h2>Apps</h2>
+<h2>Apps</h2>,
 <div id="apps">
     {% for app in user.app_auths %}
         <a class="app" href="{{app.launch_url}}">
