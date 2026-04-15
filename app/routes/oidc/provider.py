@@ -118,7 +118,6 @@ def _build_id_token(client: App, user: User, nonce: str | None = None, alg: str 
 @require_user
 def auth_oidc_page():
     _purge_expired()
-    # FIXME: This seems to be implicit
     client_id = request.args.get("client_id")
     redirect_uri = request.args.get("redirect_uri")
     state = request.args.get("state")
@@ -180,7 +179,6 @@ def auth_oidc_page():
 @require_user
 def auth_oidc_post():
     _purge_expired()
-    # FIXME: This seems to be implicit
     client_id = request.args.get("client_id")
     redirect_uri = request.args.get("redirect_uri")
     state = request.args.get("state")

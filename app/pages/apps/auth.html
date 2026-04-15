@@ -4,7 +4,8 @@
 <h1>Sign in to {{app.name}}</h1>
 <p><span style="font-weight: bold;">{{app.name}}</span> is owned by <span style="font-weight: bold;">{{app.owner.username}}</span> and will be able to see your name, username, and email.</p>
 <!-- Hi developer, while the scopes may not contain some of these, the token endpoint returns them anyway.
- Some OIDC implementations wont work without them in the token endpoint, so we keep them. -->
+ Some (bad) OIDC implementations wont work without them in the token endpoint, so we keep them.
+ Scopes are still respected in the userinfo endpoint, just not the token endpoint. -->
 <form method="post">
     <input type="submit" id="submit" value="Continue">
 </form>
