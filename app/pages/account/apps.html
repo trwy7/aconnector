@@ -8,7 +8,7 @@
     {% for app in user.apps %}
         <a class="app" href="/app/{{app.client_id}}">
             <span class="main">{{app.name}}</span><br>
-            <span class="secondary">{{app.user_auths | length}} users</span>{# this might be slow, but I havent tested it #}
+            <span class="secondary">{{app.user_auths | length}} users</span>{# this might be slow, i havent done much testing #}
         </a>
     {% endfor %}
 </div>
