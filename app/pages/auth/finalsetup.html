@@ -1,5 +1,6 @@
 {% extends "templates/base.html" %}
 {% block title %}Register{% endblock %}
+{% block mainclasses %}form{% endblock %}
 {% block content %}
 <h1>Final step</h1>
 <form action="finalregister" method="post" style="width: 400px;" onsubmit="document.getElementById('submit').disabled = true; document.getElementById('submit').innerText = 'Submitting...'">

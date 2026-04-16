@@ -1,5 +1,6 @@
 {% extends "templates/base.html" %}
 {% block title %}Login{% endblock %}
+{% block mainclasses %}form{% endblock %}
 {% block content %}
 <h1>Welcome!</h1>
 <form method="post" style="width: 300px;" onsubmit="document.getElementById('submit').disabled = true; document.getElementById('submit').innerText = 'Submitting...'">

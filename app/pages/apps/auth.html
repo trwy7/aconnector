@@ -1,5 +1,6 @@
 {% extends "templates/base.html" %}
 {% block title %}Login{% endblock %}
+{% block mainclasses %}form{% endblock %}
 {% block content %}
 <h1>Sign in to {{app.name}}</h1>
 <p><span style="font-weight: bold;">{{app.name}}</span> is owned by <span style="font-weight: bold;">{{app.owner.username}}</span>. This app will be able to see your name, username, and email.</p>

@@ -10,6 +10,7 @@
         <a class="app" href="{{app.launch_url}}">
             <span class="main">{{app.name}}</span><br>
             <span class="secondary">Owned by {{app.owner.username}}</span>
+            <form class="action" action="/app/{{app.client_id}}/revoke" method="post"><input type="submit" id="submit" value="Revoke access"></form>{# I dislike needing to use a form here, but atleast it dosent use javascript! #}
         </a>
     {% endfor %}
 </div>

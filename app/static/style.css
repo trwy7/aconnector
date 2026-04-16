@@ -59,7 +59,7 @@ main {
     padding: 16px;
     flex-direction: column;
 }
-main.hcenter, main:has(form) {
+main.hcenter, main.form {
     justify-content: center;
     justify-content: center;
     align-items: center;
@@ -71,7 +71,7 @@ input {
 form > label {
     margin: 0.5rem
 }
-main:has(form) > h1 {
+main.form > h1 {
     padding-top: 20px;
     padding-bottom: 5px;
 }
