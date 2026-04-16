@@ -34,7 +34,7 @@ def modify_app(clientid):
         redirect_url=request.form['redir'],
         launch_url=request.form['launch']
     )
-    return render_template("apps/modify.html", app=ca)
+    return redirect(request.path)
 
 @app.route("/app/<string:clientid>/rerollsecret", methods=["POST"])
 @require_user
