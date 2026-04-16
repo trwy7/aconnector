@@ -49,7 +49,7 @@ body {
     font-weight: bold;
 }
 .app > .secondary {
-    font-size: .8em;
+    font-size: .7em;
 }
 a.app:hover {
     background-color: hsl(150, 11%, 36%);
