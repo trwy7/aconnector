@@ -4,6 +4,9 @@
         <li><a href="/dashboard">Dashboard</a></li>
         <li><a href="/apps">My apps</a></li>
         <!-- TODO: Bring this back <li><a href="/account">Account</a></li> -->
+        {% if user.level > 0 %}
+        <li><a href="/admin">Admin</a></li>
+        {% endif %}
         <li><a href="/logout">Log out</a></li>
         {% else %}
         <li><a href="/">About</a></li>
