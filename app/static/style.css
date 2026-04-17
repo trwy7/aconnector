@@ -134,7 +134,39 @@ input[type="submit"].danger:hover, a.fakebutton.danger:hover{
 form.submitted.longrunning {
     margin-top: 20px;
     margin: 10px;
-    border: 3px solid hsl(120, 49%, 82%);
+    border: 3px solid;
+    animation: formSubmitBorderAnim .5s ease infinite alternate;
+}
+#loadbar {
+    transform: height 1s;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 0px;
+    width: 100vw;
+    z-index: 5000;
+    background: linear-gradient(to left, hsl(150, 10%, 27%), hsl(120, 49%, 82%), hsl(150, 10%, 27%));
+    background-size: 200% 100%;
+}
+body:has(form.submitted.longrunning) > #loadbar {
+    height: 4px;
+    animation: formSubmitHeaderAnim 2s linear infinite;
+}
+@keyframes formSubmitHeaderAnim {
+    from {
+        background-position: 0% 0%;
+    }
+    to {
+        background-position: -200% 0%;
+    }
+}
+@keyframes formSubmitBorderAnim {
+    from {
+        border-color: hsl(120, 49%, 82%);
+    }
+    to {
+        border-color: hsl(150, 10%, 27%);
+    }
 }
 /* details style was partially stolen from mdn */
 details {
@@ -153,7 +185,6 @@ summary {
 details[open] {
   padding: 0.5em;
 }
-
 details[open] summary {
   border-bottom: 2px solid hsl(120, 4%, 18%);
   margin-bottom: 0.5em;
