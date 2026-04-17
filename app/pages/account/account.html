@@ -2,6 +2,7 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 <h1>Hello, {{user.name}}!</h1>
+<a class="fakebutton" href="/account/namechange">Change name</a>
 {% if user.app_auths | length > 0 %}
 <h2>Authorized apps</h2>
 <div id="apps">

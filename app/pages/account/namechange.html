@@ -1,0 +1,11 @@
+{% extends "templates/base.html" %}
+{% block title %}Change name{% endblock %}
+{% block mainclasses %}form{% endblock %}
+{% block content %}
+<h1>Change name</h1>
+<form method="post" style="width: 400px;">
+    <label for="name">New name</label>
+    <input type="text" pattern="[A-Za-z ]*" maxlength="40" minlength="3" placeholder="A Person" name="name" value="{{user.name}}" required>
+    <input type="submit" id="submit" value="Continue" style="width: 150px;" class="main">
+</form>
+{% endblock %}

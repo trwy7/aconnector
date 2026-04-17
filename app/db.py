@@ -16,6 +16,7 @@ user_app_association = db.Table(
 
 username_regex = re.compile(r"[a-z0-9\-]{3,20}")
 name_regex = re.compile(r"[A-Za-z ]{3,40}")
+appname_regex = re.compile(r"[A-Za-z ]{3,80}")
 
 class User(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -54,6 +55,9 @@ class User(db.Model):
     def edit(self, name: str=None, email: str=None, disable: bool=None, disableapps: bool=None):
         logger.debug("[db] editing details for %s (%s): %s %s %s %s", self.name, self.username, name, email, disable, disableapps)
         if name:
+            if not re.fullmatch(name_regex, name):
+                logger.debug("[db] new name for %s failed verification", self.username)
+                return False # Should just error the bad request
             self.name = name
         if email:
             self.email = email
@@ -83,7 +87,7 @@ class App(db.Model):
     @staticmethod
     def create(owner: User, name: str):
         logger.debug("[db] creating app for %s", owner.username)
-        if not re.fullmatch(name_regex, name):
+        if not re.fullmatch(appname_regex, name):
             logger.debug("[db] app for %s failed name verification", owner.username)
             return False # Should just error the bad request
         capp = App(
