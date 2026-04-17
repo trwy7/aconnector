@@ -20,7 +20,8 @@ from .utilities import users
 @app.before_request
 def auth():
     request.user, request.token = users.get_user()
-    if request.user and request.user.disabled:
+    if request.user and request.user.disabled and request.path not in ["/static/style.css", "/static/script.js"]:
+        logger.debug("[init/auth] Prevented disabled user %s from accessing %s", request.user.username, request.path)
         return render_template("account/disabled.html"), 403
 
 @app.context_processor
