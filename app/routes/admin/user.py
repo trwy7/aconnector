@@ -11,7 +11,7 @@ def admin_vuser_page(userid):
     muser = User.query.get(userid)
     if not muser:
         return abort(404)
-    return render_template("admin/user.html", user=muser)
+    return render_template("admin/user.html", auser=muser)
 
 @app.route("/admin/user/<string:userid>", methods=['POST'])
 @require_user
