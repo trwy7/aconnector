@@ -1,7 +1,7 @@
 import logging
 import os
 import importlib
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
@@ -20,6 +20,8 @@ from .utilities import users
 @app.before_request
 def auth():
     request.user, request.token = users.get_user()
+    if request.user.disabled:
+        return render_template("account/disabled.html")
 
 @app.context_processor
 def add_conf():
