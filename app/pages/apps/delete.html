@@ -5,7 +5,7 @@
 <h1>Delete {{app.name}}</h1>
 <p>Are you sure you want to delete {{app.name}} ({{app.client_id}})?</p>
 <form method="post">
-    <input type="submit" id="submit" value="Yes">
+    <input type="submit" id="submit" value="Yes" class="danger">
 </form>
 <a class="fakebutton" href="/app/{{app.client_id}}">No</a>
 {% endblock %}

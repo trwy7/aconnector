@@ -20,7 +20,7 @@
     <input type="text" placeholder="https://example.com/oidc/redirect" maxlength="200" value="{{app.redirect_url}}" name="redir" style="width: 500px;" required>
     <label for="launch"><b>Launch URL</b></label>
     <input type="text" placeholder="https://example.com/login" maxlength="200" value="{{app.launch_url}}" name="launch" style="width: 500px;" required>
-    <input type="submit" id="submit" value="Continue">
+    <input type="submit" id="submit" value="Continue" class="main">
 </form>
-<a class="fakebutton" href="/app/{{app.client_id}}/delete">Delete</a>
+<a class="fakebutton danger" href="/app/{{app.client_id}}/delete">Delete</a>
 {% endblock %}

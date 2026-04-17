@@ -122,4 +122,12 @@ input[type="submit"].main, a.fakebutton.main {
 input[type="submit"].main:hover, a.fakebutton.main:hover{
   background-color: hsl(151, 29%, 55%);
 }
+input[type="submit"].danger, a.fakebutton.danger {
+  background-color: hsl(5, 60%, 55%);
+  border: 2px solid hsl(5, 87%, 72%);
+  color: rgb(198, 244, 223);
+}
+input[type="submit"].danger:hover, a.fakebutton.danger:hover{
+  background-color: hsl(5, 80%, 82%);
+}
 #loadOverlay {display: none;}
