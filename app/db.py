@@ -68,8 +68,6 @@ class App(db.Model):
     launch_url = db.Column(db.String(200), default="https://example.com/login/oidc")
     scopes = db.Column(db.Text, default="username,email")
     user_auths = db.relationship("User", secondary=user_app_association, back_populates="app_auths")
-    verified = db.Column(db.Boolean, nullable=False, default=False)
-    official = db.Column(db.Boolean, nullable=False, default=False)
     @staticmethod
     def create(owner: User, name: str):
         logger.debug("[db] creating app for %s", owner.username)
