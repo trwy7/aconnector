@@ -57,7 +57,7 @@ def register_redir():
 
 @app.route("/register", methods=['POST'])
 @limiter.limit("2 per 2 seconds")
-@limiter.limit("15 per minute")
+@limiter.limit("5 per minute")
 @limiter.limit("30 per hour")
 def register_post():
     scode = ev_list.get(request.form['email'])
