@@ -94,12 +94,12 @@ textarea {
     background-color: hsl(120, 7%, 21%);
     color: rgb(198, 244, 223);
 }
-button,
 input[type="submit"],
 a.fakebutton {
-    margin: 0.5rem;
+    margin: .5rem;
     margin-top: 10px;
     margin-bottom: 10px;
+    font-size: .85em;
     padding: 7px;
     border-radius: 5px;
     background-color: hsl(120, 8%, 23%);
@@ -111,19 +111,15 @@ a.fakebutton {
     text-decoration: none;
     width: fit-content;
 }
-button:hover {
+input[type="submit"]:hover, a.fakebutton:hover {
   background-color: hsl(120, 13%, 33%);
 }
-button:disabled {
-  background-color: hsl(0, 0%, 6%);
-  cursor: not-allowed;
-}
-input[type="submit"] {
+input[type="submit"].main, a.fakebutton.main {
   background-color: hsl(151, 49%, 90%);
   border: 2px solid hsl(120, 49%, 82%);
   color: hsl(120, 7%, 11%);
 }
-input[type="submit"]:hover {
+input[type="submit"].main:hover, a.fakebutton.main:hover{
   background-color: hsl(151, 29%, 55%);
 }
 #loadOverlay {display: none;}
