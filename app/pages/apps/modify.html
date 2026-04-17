@@ -2,17 +2,18 @@
 {% block title %}Modify app{% endblock %}
 {% block mainclasses %}form{% endblock %}
 {% block content %}
-<h1>Modify {{app.name}}</h1>
-<p>The client ID is {{app.client_id}}</p>
-<p>The issuer URL is https://{{host}}/app/{{app.client_id}}</p>
-<p>The auth endpoint is https://{{host}}/apps/auth</p>
-<p>The token endpoint is https://{{host}}/apps/token</p>
-<p>The userinfo endpoint is https://{{host}}/apps/userinfo</p>
-<p>The JWKS endpoint is https://{{host}}/apps/jwks</p>
-<p>Your app may only need some of the above information.</p>
-<form action="/app/{{app.client_id}}/rerollsecret" method="post">
-    <input type="submit" id="submit" value="Regenerate client secret">
-</form>
+<h1>{{app.name}}</h1>
+<p>You may authenticate users with OpenID connect.</p>
+<details>
+  <summary>Details</summary>
+    <p>The client ID is {{app.client_id}}</p>
+    <p>The issuer URL is https://{{host}}/app/{{app.client_id}}</p>
+    <p>The auth endpoint is https://{{host}}/apps/auth</p>
+    <p>The token endpoint is https://{{host}}/apps/token</p>
+    <p>The userinfo endpoint is https://{{host}}/apps/userinfo</p>
+    <p>The JWKS endpoint is https://{{host}}/apps/jwks</p>
+    <p>Your app may only need some of the above information.</p>
+</details>
 <form method="post" onsubmit="document.getElementById('submit').disabled = true; document.getElementById('submit').innerText = 'Submitting...'">
     <label for="name"><b>Name</b></label>
     <input type="text" placeholder="My app" value="{{app.name}}" maxlength="80" name="name" required>
@@ -20,7 +21,10 @@
     <input type="text" placeholder="https://example.com/oidc/redirect" maxlength="200" value="{{app.redirect_url}}" name="redir" style="width: 500px;" required>
     <label for="launch"><b>Launch URL</b></label>
     <input type="text" placeholder="https://example.com/login" maxlength="200" value="{{app.launch_url}}" name="launch" style="width: 500px;" required>
-    <input type="submit" id="submit" value="Continue" class="main">
+    <input type="submit" id="submit" value="Save" class="main">
+</form>
+<form action="/app/{{app.client_id}}/rerollsecret" method="post" style="padding-top: 0;">
+    <input type="submit" id="submit" value="Reset client secret">
 </form>
 <a class="fakebutton danger" href="/app/{{app.client_id}}/delete">Delete</a>
 {% endblock %}

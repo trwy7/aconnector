@@ -112,22 +112,50 @@ a.fakebutton {
     width: fit-content;
 }
 input[type="submit"]:hover, a.fakebutton:hover {
-  background-color: hsl(120, 13%, 33%);
+    background-color: hsl(120, 13%, 33%);
 }
 input[type="submit"].main, a.fakebutton.main {
-  background-color: hsl(151, 49%, 90%);
-  border: 2px solid hsl(120, 49%, 82%);
-  color: hsl(120, 7%, 11%);
+    background-color: hsl(151, 49%, 90%);
+    border: 2px solid hsl(120, 49%, 82%);
+    color: hsl(120, 7%, 11%);
 }
 input[type="submit"].main:hover, a.fakebutton.main:hover{
-  background-color: hsl(151, 29%, 55%);
+    background-color: hsl(151, 29%, 55%);
 }
 input[type="submit"].danger, a.fakebutton.danger {
-  background-color: hsl(5, 60%, 55%);
-  border: 2px solid hsl(5, 87%, 72%);
-  color: rgb(198, 244, 223);
+    background-color: hsl(5, 60%, 55%);
+    border: 2px solid hsl(5, 87%, 72%);
+    color: rgb(198, 244, 223);
 }
 input[type="submit"].danger:hover, a.fakebutton.danger:hover{
-  background-color: hsl(5, 80%, 82%);
+    background-color: hsl(5, 80%, 82%);
+}
+/* details style was partially stolen from mdn */
+details {
+    border: 2px solid hsl(120, 6%, 33%);
+    border-radius: 4px;
+    padding: 0.5em 0.5em 0;
+    margin-top: 10px;
+}
+summary {
+  font-weight: bold;
+  margin: -0.5em -0.5em 0;
+  padding: 0.5em;
+  cursor: pointer;
+}
+
+details[open] {
+  padding: 0.5em;
+}
+
+details[open] summary {
+  border-bottom: 2px solid hsl(120, 4%, 18%);
+  margin-bottom: 0.5em;
+}
+details div.divider {
+    width: 100%;
+    height: 2px;
+    background-color: hsl(120, 4%, 18%);
+    margin: 0.5em;
 }
 #loadOverlay {display: none;}
