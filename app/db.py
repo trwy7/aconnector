@@ -51,6 +51,18 @@ class User(db.Model):
         db.session.add(usr)
         db.session.commit()
         return usr
+    def edit(self, name: str=None, email: str=None, disable: bool=None, disableapps: bool=None):
+        logger.debug("[db] editing details for %s (%s): %s %s %s %s", self.name, self.username, name, email, disable, disableapps)
+        if name:
+            self.name = name
+        if email:
+            self.email = email
+        if disable is not None:
+            self.disabled = disable
+        if disableapps is not None:
+            self.disable_app_create = disableapps
+        db.session.commit()
+        return self
 
 class Token(db.Model):
     token = db.Column(db.String(60), primary_key=True, default=lambda: random.randbytes(30).hex())

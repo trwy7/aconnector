@@ -1,4 +1,4 @@
-from flask import render_template, request, abort
+from flask import render_template, request, abort, redirect
 from app import app
 from app.db import User
 from app.utilities.users import require_user
@@ -21,5 +21,10 @@ def admin_vuser_modify(userid):
     muser = User.query.get(userid)
     if not muser:
         return abort(404)
-
+    muser.edit(
+        name=request.form['name'],
+        email=request.form['email'],
+        disable=request.form.get('disable') == 'on',
+        disableapps=request.form.get('disableapp') == 'on'
+    )
     return redirect(request.path)

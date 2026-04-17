@@ -25,9 +25,9 @@
     <label for="email"><b>Email</b></label>
     <input type="email" placeholder="person@example.com" maxlength="100" value="{{user.email}}" name="email" style="width: 300px;" required>
     <label for="disable"><b>Disable account</b></label>
-    <input type="checkbox" name="disable">
+    <input type="checkbox" name="disable" {% if user.disabled %}checked{%endif%}>
     <label for="disableapp"><b>Prevent app creation</b></label>
-    <input type="checkbox" name="disableapp">
+    <input type="checkbox" name="disableapp" {% if user.disable_app_create %}checked{%endif%}>
     <input type="submit" id="submit" value="Save" class="main">
 </form>
 {% endblock %}
