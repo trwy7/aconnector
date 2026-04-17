@@ -2,6 +2,14 @@ from flask import render_template, request
 from flask_limiter.errors import RateLimitExceeded
 from app import app, logger
 
+@app.errorhandler(401)
+def unauthorized(e):
+    return render_template("templates/error.html", status_code=401, error_message="Unauthorized"), 401
+
+@app.errorhandler(403)
+def forbidden(e):
+    return render_template("templates/error.html", status_code=403, error_message="Forbidden"), 403
+
 @app.errorhandler(404)
 def error_not_found(e):
     return render_template("templates/error.html", status_code=404, error_message="Not found"), 404
