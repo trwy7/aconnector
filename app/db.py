@@ -25,6 +25,7 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     name = db.Column(db.String(40), nullable=False)
     disabled = db.Column(db.Boolean, nullable=False, default=False)
+    disable_app_create = db.Column(db.Boolean, nullable=False, default=False)
     app_auths = db.relationship("App", secondary=user_app_association, back_populates="user_auths")
     @staticmethod
     def create(email: str, username: str, name: str):
@@ -67,6 +68,8 @@ class App(db.Model):
     launch_url = db.Column(db.String(200), default="https://example.com/login/oidc")
     scopes = db.Column(db.Text, default="username,email")
     user_auths = db.relationship("User", secondary=user_app_association, back_populates="app_auths")
+    verified = db.Column(db.Boolean, nullable=False, default=False)
+    official = db.Column(db.Boolean, nullable=False, default=False)
     @staticmethod
     def create(owner: User, name: str):
         logger.debug("[db] creating app for %s", owner.username)
