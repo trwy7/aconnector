@@ -206,6 +206,10 @@ def auth_oidc_post():
     if "offline_access" in requested_scopes:
         logger.warning("[oidc] offline_access requested but unsupported client_id=%s", client.client_id)
         return _oidc_error_redirect(redirect_uri, "invalid_scope", state)
+    
+    if request.form.get('choice') != "Allow":
+        logger.warning("[oidc] User denied auth for client_id=%s", client.client_id)
+        return _oidc_error_redirect(redirect_uri, "access_denied", state)
 
     id_token_alg = _resolve_id_token_alg(client)
     if not id_token_alg:
