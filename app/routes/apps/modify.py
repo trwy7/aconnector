@@ -18,7 +18,7 @@ def modify_app_page(clientid):
     ca = App.query.get(clientid)
     if not ca:
         return abort(404)
-    if request.user.level == 4 or ca.owner == request.user:
+    if request.user.level == 3 or ca.owner == request.user:
         return render_template("apps/modify.html", app=ca, host=request.host)
     return abort(403)
 
@@ -28,7 +28,7 @@ def modify_app(clientid):
     ca = App.query.get(clientid)
     if not ca:
         return abort(404)
-    if request.user.level == 4 or ca.owner == request.user:
+    if request.user.level == 3 or ca.owner == request.user:
         ca.edit(
             name=request.form['name'],
             redirect_url=request.form['redir'],
@@ -43,7 +43,7 @@ def delete_app_page(clientid):
     ca = App.query.get(clientid)
     if not ca:
         return abort(404)
-    if request.user.level == 4 or ca.owner == request.user:
+    if request.user.level == 3 or ca.owner == request.user:
         return render_template("apps/delete.html", app=ca)
     return abort(403)
 
@@ -53,7 +53,7 @@ def delete_app(clientid):
     ca = App.query.get(clientid)
     if not ca:
         return abort(404)
-    if request.user.level == 4 or ca.owner == request.user:
+    if request.user.level == 3 or ca.owner == request.user:
         ca.delete()
         return redirect("/apps")
     return abort(403)
