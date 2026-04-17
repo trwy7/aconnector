@@ -20,7 +20,7 @@ from .utilities import users
 @app.before_request
 def auth():
     request.user, request.token = users.get_user()
-    if request.user.disabled:
+    if request.user and request.user.disabled:
         return render_template("account/disabled.html"), 403
 
 @app.context_processor
