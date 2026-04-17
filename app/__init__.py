@@ -21,7 +21,7 @@ from .utilities import users
 def auth():
     request.user, request.token = users.get_user()
     if request.user.disabled:
-        return render_template("account/disabled.html")
+        return render_template("account/disabled.html"), 403
 
 @app.context_processor
 def add_conf():
