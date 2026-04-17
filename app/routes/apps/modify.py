@@ -16,6 +16,8 @@ def create_app_page():
 @require_user
 def modify_app_page(clientid):
     ca = App.query.get(clientid)
+    if not ca:
+        return abort(404)
     if request.user.level == 4 or ca.owner == request.user:
         return render_template("apps/modify.html", app=ca, host=request.host)
     return abort(403)
@@ -24,6 +26,8 @@ def modify_app_page(clientid):
 @require_user
 def modify_app(clientid):
     ca = App.query.get(clientid)
+    if not ca:
+        return abort(404)
     if request.user.level == 4 or ca.owner == request.user:
         ca.edit(
             name=request.form['name'],
