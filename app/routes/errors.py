@@ -1,6 +1,6 @@
-from flask import render_template
+from flask import render_template, request
 from flask_limiter.errors import RateLimitExceeded
-from app import app
+from app import app, logger
 
 @app.errorhandler(404)
 def error_not_found(e):
@@ -17,4 +17,5 @@ def ratelimited(e):
 @app.errorhandler(500)
 @app.errorhandler(Exception)
 def internal_server_error(e):
+    logger.error("In request for %s: %s", request.path, str(e), exc_info=e)
     return render_template("templates/error.html", status_code=500, error_message="Internal server error"), 500
