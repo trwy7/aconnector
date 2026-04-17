@@ -1,0 +1,7 @@
+{% extends "templates/base.html" %}
+{% block title %}Error {{status_code}}{% endblock %}
+{% block mainclasses %}hcenter{% endblock %}
+{% block content %}
+<h1>{{status_code}}</h1>
+<p>{{error_message}}</p>
+{% endblock %}

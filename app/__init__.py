@@ -25,7 +25,6 @@ def auth():
 
 @app.context_processor
 def add_conf():
-
     return {"gconfig": app.config, "user": request.user, "token": request.token}
 
 ## Init extensions
