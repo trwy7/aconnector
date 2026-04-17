@@ -1,0 +1,33 @@
+{% extends "templates/base.html" %}
+{% block title %}User{% endblock %}
+{% block mainclasses %}form{% endblock %}
+{% block content %}
+<h1>Modify {{user.name}} ({{user.username}})</h1>
+<details>
+  <summary>Auths</summary>
+  <p>This user has authenticated with {{user.app_auths | length}} apps.</p>
+  <div id="apps">
+        {% for app in user.app_auths %}
+            <div class="app">
+                <span class="main">{{app.name}}</span><br>
+                <span class="secondary">Owned by {{app.owner.name}} ({{app.owner.username}})</span><br>
+                <span class="secondary">{{app.user_auths | length}} users</span><br>
+                <a class="fakebutton main" href="{{app.launch_url}}">Launch</a>
+                <a class="fakebutton" href="/app/{{app.client_id}}">Modify</a>
+                <a class="fakebutton danger" href="/app/{{app.client_id}}/delete">Delete</a>
+            </div>
+        {% endfor %}
+    </div>
+</details>
+<form method="post">
+    <label for="name"><b>Name</b></label>
+    <input type="text" placeholder="Person" value="{{user.name}}" maxlength="40" name="name" required>
+    <label for="email"><b>Email</b></label>
+    <input type="email" placeholder="person@example.com" maxlength="100" value="{{user.email}}" name="email" style="width: 300px;" required>
+    <label for="disable"><b>Disable account</b></label>
+    <input type="checkbox" name="disable">
+    <label for="disableapp"><b>Prevent app creation</b></label>
+    <input type="checkbox" name="disableapp">
+    <input type="submit" id="submit" value="Save" class="main">
+</form>
+{% endblock %}

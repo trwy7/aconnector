@@ -14,7 +14,7 @@
     <p>The JWKS endpoint is https://{{host}}/apps/jwks</p>
     <p>Your app may only need some of the above information.</p>
 </details>
-<form method="post" onsubmit="document.getElementById('submit').disabled = true; document.getElementById('submit').innerText = 'Submitting...'">
+<form method="post">
     <label for="name"><b>Name</b></label>
     <input type="text" placeholder="My app" value="{{app.name}}" maxlength="80" name="name" required>
     <label for="redir"><b>Redirect URL</b></label>
