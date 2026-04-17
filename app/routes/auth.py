@@ -1,5 +1,6 @@
 import random
 import re
+from datetime import datetime, timedelta
 from flask import render_template, request, url_for, redirect
 from app import app, logger, limiter
 from app.db import User, db
@@ -29,9 +30,9 @@ def login_post():
             logger.debug("[login] Email did not pass regex: %s", request.form['email'])
             return render_template("auth/login.html", status="Invalid email")
         logger.debug("[login] Sending register email to %s", request.form['email'])
-        if request.form['email'] not in ev_list: # FIXME: add code expiry
-            ev_list[request.form['email']] = random.randint(100000, 999999)
-        email.send(request.form['email'], f"Your {app.config['NAME']} resgistration code is {str(ev_list[request.form['email']])}", f"Your code is: {str(ev_list[request.form['email']])}\nIf you did not request this email, you may discard it.")
+        if request.form['email'] not in ev_list or ev_list[request.form['email']][1] < datetime.now():
+            ev_list[request.form['email']] = (random.randint(100000, 999999), datetime.now() + timedelta(minutes=5))
+        email.send(request.form['email'], f"Your {app.config['NAME']} resgistration code is {str(ev_list[request.form['email']][0])}", f"Your code is: {str(ev_list[request.form['email']][0])}.\nYour code expires in 5 minutes, if you did not request this email, you may discard it.")
         return render_template("auth/requestcode.html", email=request.form['email'])
 
 @app.route("/login/<string:token>")
@@ -66,12 +67,15 @@ def register_post():
     scode = ev_list.get(request.form['email'])
     if not scode:
         return redirect("/login")
-    if scode != int(request.form['code']):
+    if scode[1] < datetime.now():
+        ev_list.pop(request.form['email'], None)
+        return redirect("/login")
+    if scode[0] != int(request.form['code']):
         return render_template("auth/requestcode.html", email=request.form['email'], status="Incorrect code")
     luser = User.query.filter_by(email=request.form['email']).first()
     if luser:
         return "An account was already made with this email!"
-    return render_template("auth/finalsetup.html", email=request.form['email'], code=scode)
+    return render_template("auth/finalsetup.html", email=request.form['email'], code=scode[0])
 
 @app.route("/finalregister", methods=['POST'])
 @limiter.limit("2 per 2 seconds")
@@ -80,6 +84,9 @@ def register_post():
 def register_finalpost():
     scode = ev_list.pop(request.form['email'], None)
     if not scode:
+        return redirect("/login")
+    if scode[1] < datetime.now():
+        ev_list.pop(request.form['email'], None)
         return redirect("/login")
     if scode != int(request.form['code']):
         return render_template("auth/requestcode.html", email=request.form['email'], status="Incorrect code")
