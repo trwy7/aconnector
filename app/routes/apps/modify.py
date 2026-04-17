@@ -6,6 +6,8 @@ from app.utilities.users import require_user
 @app.route("/apps/create")
 @require_user
 def create_app_page():
+    if request.user.disable_app_create:
+        return render_template("templates/error.html", status_code=403, error_message="Your account has been restricted from creating apps."), 403
     da = App.create(
         request.user,
         "My new app"
