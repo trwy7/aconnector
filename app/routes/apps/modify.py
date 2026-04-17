@@ -61,8 +61,8 @@ def delete_app(clientid):
 @app.route("/app/<string:clientid>/rerollsecret", methods=["POST"])
 @require_user
 def reroll_app_secret(clientid):
+    ca = App.query.get(clientid)
     if ca.owner == request.user:
-        ca = App.query.get(clientid)
         ca.reroll_secret()
         return render_template("apps/reroll.html", app=ca)
     return abort(403)
