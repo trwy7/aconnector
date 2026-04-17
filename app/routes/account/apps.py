@@ -41,7 +41,7 @@ def modify_app(clientid):
 @app.route("/app/<string:clientid>/rerollsecret", methods=["POST"])
 @require_user
 def reroll_app_secret(clientid):
-    if request.user.level == 4 or ca.owner == request.user:
+    if ca.owner == request.user:
         ca = App.query.get(clientid)
         ca.reroll_secret()
         return render_template("apps/reroll.html", app=ca)
