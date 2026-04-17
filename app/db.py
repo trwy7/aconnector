@@ -98,6 +98,9 @@ class App(db.Model):
             self.launch_url = launch_url
         db.session.commit()
         return self
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
 with app.app_context():
     db.create_all()

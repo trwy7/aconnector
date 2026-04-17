@@ -37,6 +37,27 @@ def modify_app(clientid):
         return redirect(request.path)
     return abort(403)
 
+@app.route("/app/<string:clientid>/delete")
+@require_user
+def delete_app_page(clientid):
+    ca = App.query.get(clientid)
+    if not ca:
+        return abort(404)
+    if request.user.level == 4 or ca.owner == request.user:
+        return render_template("apps/delete.html", app=ca)
+    return abort(403)
+
+@app.route("/app/<string:clientid>/delete", methods=["POST"])
+@require_user
+def delete_app(clientid):
+    ca = App.query.get(clientid)
+    if not ca:
+        return abort(404)
+    if request.user.level == 4 or ca.owner == request.user:
+        ca.delete()
+        return redirect("/apps")
+    return abort(403)
+
 @app.route("/app/<string:clientid>/rerollsecret", methods=["POST"])
 @require_user
 def reroll_app_secret(clientid):
