@@ -68,6 +68,7 @@ def register_post():
     if not scode:
         return redirect("/login")
     if scode[1] < datetime.now():
+        logger.debug("[login] Removing expired register code for %s", request.form['email'])
         ev_list.pop(request.form['email'], None)
         return redirect("/login")
     if scode[0] != int(request.form['code']):
@@ -82,20 +83,24 @@ def register_post():
 @limiter.limit("15 per minute")
 @limiter.limit("30 per hour")
 def register_finalpost():
+    logger.debug("[login] Removing register code for %s", request.form['email'])
     scode = ev_list.pop(request.form['email'], None)
     if not scode:
         return redirect("/login")
     if scode[1] < datetime.now():
-        ev_list.pop(request.form['email'], None)
+        logger.debug("[login] %s attempted making an account with an expired code: %s", request.form['email'], str(scode[1]))
         return redirect("/login")
-    if scode != int(request.form['code']):
-        return render_template("auth/requestcode.html", email=request.form['email'], status="Incorrect code")
+    if scode[0] != int(request.form['code']):
+        logger.debug("[login] %s attempted making an account with an invalid code: %s", request.form['email'], str(scode[0]))
+        return redirect("/login")
+    logger.debug("[login] Creating account for %s", request.form['email'])
     luser = User.query.filter_by(email=request.form['email']).first()
     if luser:
         return "An account was already made with this email!"
     luser = User.query.filter_by(username=request.form['uname']).first()
     if luser:
-        return render_template("auth/finalsetup.html", email=request.form['email'], code=scode, status=f"{request.form['uname']} is already taken")
+        ev_list[request.form['email']] = (scode[0], datetime.now() + timedelta(minutes=5))
+        return render_template("auth/finalsetup.html", email=request.form['email'], code=scode[0], status=f"{request.form['uname']} is already taken")
     logger.debug("[auth] Creating user for %s", request.form['email'])
     user = User.create(email=request.form['email'], username=request.form['uname'], name=request.form['name'])
     rs = redirect("/dashboard")
