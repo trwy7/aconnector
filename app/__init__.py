@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 import importlib
 from flask import Flask, request, render_template
 from flask_limiter import Limiter
@@ -15,6 +16,8 @@ app = Flask(__name__, template_folder="pages", static_folder="static")
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////data/db.sqlite3'
 app.config['NAME'] = os.environ.get("APP_NAME", "AuthBridge")
 app.config['OWNER_EMAIL'] = os.environ.get("OWNER_EMAIL", "")
+app.config['VEMAIL_REGEX'] = re.compile(os.environ.get("VEMAIL_REGEX", ""))
+app.config['VEMAIL_MESSAGE'] = os.environ.get("VEMAIL_MESSAGE", "")
 
 from .utilities import users
 @app.before_request

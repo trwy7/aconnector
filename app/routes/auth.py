@@ -1,4 +1,5 @@
 import random
+import re
 from flask import render_template, request, url_for, redirect
 from app import app, logger, limiter
 from app.db import User, db
@@ -24,7 +25,9 @@ def login_post():
         email.send(request.form['email'], f"Welcome back, {luser.username}!", f"Click this link to sign back in: {url_for("login_tokpost", token=lcode, _external=True, _scheme="https")}")
         return render_template("auth/rlink.html", email=request.form['email'])
     else:
-        # TODO: Email regex
+        if not re.fullmatch(app.config['VEMAIL_REGEX'], request.form['email']):
+            logger.debug("[login] Email did not pass regex: %s", request.form['email'])
+            return render_template("auth/login.html", status="Invalid email")
         logger.debug("[login] Sending register email to %s", request.form['email'])
         if request.form['email'] not in ev_list: # FIXME: add code expiry
             ev_list[request.form['email']] = random.randint(100000, 999999)

@@ -24,13 +24,15 @@ Create a file named docker-compose.override.yml and fill out these contents:
 services:
   authbridge:
     environment:
-      - APP_NAME=AuthBridge # Used across the app, feel free to make it whatever
-      - EMAIL_PASSWORD=123456 # SMTP information
-      - EMAIL_USERNAME=user # SMTP information
-      - EMAIL_HOST=mail.example.com # SMTP information
-      - EMAIL_PORT=2525 # SMTP information
-      - EMAIL_FROM=authbridge@example.com # SMTP information
-      - OWNER_EMAIL=abadmin@trwy.net # Your personal email address, gets extra permissions
+      APP_NAME: AuthBridge # Used across the app, feel free to make it whatever
+      EMAIL_PASSWORD: 123456 # SMTP information
+      EMAIL_USERNAME: user # SMTP information
+      EMAIL_HOST: mail.example.com # SMTP information
+      EMAIL_PORT: 2525 # SMTP information
+      EMAIL_FROM: authbridge@example.com # SMTP information
+      OWNER_EMAIL: abadmin@trwy.net # Your personal email address, gets extra permissions
+      VEMAIL_REGEX: ".*@.*\\..*" # The regex that all emails must follow.
+      VEMAIL_MESSAGE: "" # The message that is shown on the login page, set this if you have a custom email regex
 ```
 
 Run it with `docker compose up -d --build`. A reverse proxy that supports SSL is required, make it proxy to port 7035.

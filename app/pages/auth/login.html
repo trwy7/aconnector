@@ -6,6 +6,10 @@
 <form method="post" style="width: 300px;" class="longrunning">
     <label for="email"><b>Email</b></label>
     <input type="email" placeholder="example@example.com" name="email" required>
+    {% if gconfig.VEMAIL_MESSAGE %}
+    <br><span style="font-size: .8em;">{{gconfig.VEMAIL_MESSAGE}}</span>
+    {% endif %}
     <input type="submit" id="submit" value="Continue" class="main">
-</form>
+</form><br>
+<span style="font-size: .8em;">{{status}}</span>
 {% endblock %}
