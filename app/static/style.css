@@ -70,6 +70,11 @@ main.hcenter, main.form {
     justify-content: center;
     align-items: center;
     text-align: center;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+    display:flex;
 }
 input {
     text-align: center;
