@@ -29,7 +29,7 @@ def auth():
         return render_template("account/disabled.html"), 403
 
 @app.context_processor
-def add_conf():
+def ctx_processor():
     return {"gconfig": app.config, "user": request.user, "token": request.token}
 
 ## Init extensions
