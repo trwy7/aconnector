@@ -2,7 +2,9 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 <h1>Your Apps</h1>
+{% if not user.disable_app_create %}
 <a class="fakebutton" href="/apps/create">Create app</a>
+{% endif %}
 {% if user.apps | length > 0 %}
 <div id="apps">
     {% for app in user.apps %}
