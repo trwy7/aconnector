@@ -28,7 +28,6 @@ def codelogin_post():
         "abridgetoken",
         luser.create_token().token,
         httponly=True,
-        samesite="Lax",
         secure=False,
         max_age=2419200
     )
