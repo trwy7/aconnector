@@ -12,7 +12,9 @@ A simple email -> openid connect bridge. Meant to be lighter then authentik in p
 
 ### Warning
 
-This app is meant for use as a community service, where one person hosts it and everyone in a group can use it. This means every authenticated user can make their own OIDC app.
+This app is meant for use as a community tool, where one person hosts it and everyone in a group can use it. This means every authenticated user can make their own OIDC client.
+
+**All cookes are stored with the secure header, reguardless of whether the request was made securly. You should setup a reverse proxy, like caddy.**
 
 ### Setup
 
