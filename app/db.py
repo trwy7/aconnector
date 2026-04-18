@@ -27,9 +27,10 @@ class User(db.Model):
     name = db.Column(db.String(40), nullable=False)
     disabled = db.Column(db.Boolean, nullable=False, default=False)
     disable_app_create = db.Column(db.Boolean, nullable=False, default=False)
+    allowed_apps = db.Column(db.Text, nullable=True, default=None)
     app_auths = db.relationship("App", secondary=user_app_association, back_populates="user_auths")
     @staticmethod
-    def create(email: str, username: str, name: str):
+    def create(email: str, username: str, name: str, disabled: bool=False):
         if not re.fullmatch(username_regex, username):
             logger.debug("[db] rejecting invalid username")
             return False # Should just error the bad request
@@ -41,7 +42,8 @@ class User(db.Model):
             email=email,
             username=username,
             name=name,
-            level=0 if email != app.config['OWNER_EMAIL'] else 3
+            level=0 if email != app.config['OWNER_EMAIL'] else 3,
+            disabled=disabled
         )
         db.session.add(usr)
         db.session.commit()
