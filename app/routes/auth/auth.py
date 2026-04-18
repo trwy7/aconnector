@@ -14,7 +14,7 @@ def login_page():
     return render_template("auth/login.html")
 
 @app.route("/login", methods=['POST'])
-@limiter.limit("1 per 2 seconds")
+@limiter.limit("1 per 5 seconds")
 @limiter.limit("5 per minute")
 @limiter.limit("20 per hour")
 def login_post():
