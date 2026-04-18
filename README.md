@@ -30,7 +30,8 @@ services:
       EMAIL_HOST: mail.example.com # SMTP information
       EMAIL_PORT: 2525 # SMTP information
       EMAIL_FROM: authbridge@example.com # SMTP information
-      OWNER_EMAIL: abadmin@trwy.net # Your personal email address, gets extra permissions
+      OWNER_EMAIL: abadmin@example.com # Your personal admin email address, gets extra permissions
+      CONTACT_EMAIL: contact@example.com # An email that is displayed on some access denied pages
       VEMAIL_REGEX: ".*@.*\\..*" # The regex that all emails must follow.
       VEMAIL_MESSAGE: "" # The message that is shown on the login page, set this if you have a custom email regex
 ```
