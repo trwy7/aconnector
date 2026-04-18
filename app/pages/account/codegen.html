@@ -1,0 +1,9 @@
+{% extends "templates/base.html" %}
+{% block title %}Code{% endblock %}
+{% block content %}
+<h1>Login to another device</h1>
+<p>Enter these details to sign in:</p>
+<p>Username: <b>{{user.username}}</b></p>
+<p>Code: <b>{{code}}</b></p>
+<p>This code is available for 5 minutes.</p>
+{% endblock %}

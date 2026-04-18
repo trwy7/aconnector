@@ -2,7 +2,8 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 <h1>Hello, {{user.name}}!</h1>
-<a class="fakebutton" href="/account/namechange">Change name</a>
+<a class="fakebutton" href="/account/namechange" style="margin: 0;">Change name</a>
+<form action="/account/getlogincode" method="post" style="width: fit-content;"><input type="submit" id="submit" value="Add a new device" style="margin: 0;"></form>
 {% if user.app_auths | length > 0 %}
 <h2>Authorized apps</h2>
 <div id="apps">
