@@ -35,7 +35,7 @@ a {
     color: rgb(198, 244, 223);
 }
 body {
-    font-family: 'Inter', 'Roboto', sans-serif;
+    font-family: 'Inter', 'Roboto', 'Arial', sans-serif;
     color: rgb(198, 244, 223);
     padding-top: 40px;
     background-color: hsl(120, 3%, 7%);

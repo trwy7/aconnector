@@ -1,0 +1,15 @@
+{% extends "templates/base.html" %}
+{% block title %}Login with a code{% endblock %}
+{% block mainclasses %}form{% endblock %}
+{% block content %}
+<h1>Login with another device</h1>
+<p>On your other device, go to account, then add a new device.</p>
+<form method="post" style="width: 400px;">
+    <label for="uname">Username</label><br>
+    <input type="text" name="uname" required><br>
+    <label for="code">Code</label><br>
+    <input type="tel" placeholder="123456" pattern="[0-9]*" maxlength="6" name="code" required style="width: 150px; letter-spacing: 0.3rem;"><br>
+    <input type="submit" id="submit" value="Continue" style="width: 125px;" class="main">
+    <p>{{status}}</p>
+</form>
+{% endblock %}
