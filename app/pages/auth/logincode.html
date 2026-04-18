@@ -1,0 +1,15 @@
+{% extends "templates/base.html" %}
+{% block title %}Register{% endblock %}
+{% block mainclasses %}form{% endblock %}
+{% block content %}
+<h1>Welcome back!</h1>
+<form action="loginc" method="post" style="width: 400px;">
+    <p>We sent a code to <!--email_off-->{{email}}<!--/email_off-->, enter it here.</p>
+    <input type="email" value="{{email}}" name="email" required readonly hidden>
+    <input type="text" value="{{vcode}}" name="vcode" required readonly hidden>
+    <input type="tel" placeholder="1234567" pattern="[0-9]*" maxlength="7" name="code" required style="width: 150px; letter-spacing: 0.3rem;">
+    <input type="submit" id="submit" value="Continue" style="width: 125px;" class="main">
+    <p>{{status}}</p>
+</form>
+<p style="font-size: 0.8em;">id: {{vcode}}</p>
+{% endblock %}

@@ -6,8 +6,8 @@ from app import app, logger, limiter
 from app.db import User, db
 from app.utilities import email
 
-ev_list = {}
-login_list = {}
+register_list = {}
+loginc_list = {}
 
 @app.route("/login")
 def login_page():
@@ -21,33 +21,36 @@ def login_post():
     luser = User.query.filter_by(email=request.form['email']).first()
     if luser:
         logger.debug("[login] Found user for %s: %s. Sending email...", request.form['email'], luser.username)
-        lcode = random.randbytes(20).hex()
-        login_list[lcode] = luser.id
-        email.send(request.form['email'], f"Welcome back, {luser.username}!", f"Click this link to sign back in: {url_for("login_tokpost", token=lcode, _external=True, _scheme="https")}")
-        return render_template("auth/rlink.html", email=request.form['email'])
+        code = random.randint(1000000, 9999999)
+        vcode = random.randbytes(5).hex()
+        loginc_list[(code, vcode, request.form['email'])] = (luser.id, datetime.now() + timedelta(minutes=5))
+        email.send(request.form['email'], f"Welcome back, {luser.username}!", f"Your login code is {str(code)}, enter it to sign back in.\nThe code expires in 5 minutes.\nid: {vcode}")
+        return render_template("auth/logincode.html", email=request.form['email'], vcode=vcode)
     else:
         if not re.fullmatch(app.config['VEMAIL_REGEX'], request.form['email']):
             logger.debug("[login] Email did not pass regex: %s", request.form['email'])
             return render_template("auth/login.html", status="Invalid email")
         logger.debug("[login] Sending register email to %s", request.form['email'])
-        if request.form['email'] not in ev_list or ev_list[request.form['email']][1] < datetime.now():
-            ev_list[request.form['email']] = (random.randint(100000, 999999), datetime.now() + timedelta(minutes=5))
-        email.send(request.form['email'], f"Your {app.config['NAME']} resgistration code is {str(ev_list[request.form['email']][0])}", f"Your code is: {str(ev_list[request.form['email']][0])}.\nYour code expires in 5 minutes, if you did not request this email, you may discard it.")
+        if request.form['email'] not in register_list or register_list[request.form['email']][1] < datetime.now():
+            register_list[request.form['email']] = (random.randint(100000, 999999), datetime.now() + timedelta(minutes=5))
+        email.send(request.form['email'], f"Your {app.config['NAME']} resgistration code is {str(register_list[request.form['email']][0])}", f"Hello!\nYour code is: {str(register_list[request.form['email']][0])}.\nYour code expires in 5 minutes, if you did not request this email, you may discard it.")
         return render_template("auth/requestcode.html", email=request.form['email'])
 
-@app.route("/login/<string:token>")
-@limiter.limit("2 per 2 seconds")
-def login_tokpost(token):
-    uid = login_list.pop(token, None)
-    if not uid:
-        return redirect("/login")
-    luser = User.query.get(uid)
-    if not luser:
-        return "uh oh", 500
+@app.route("/loginc", methods=['POST'])
+@limiter.limit("5 per 4 seconds")
+@limiter.limit("3 per 4 seconds", key_func=lambda: request.form.get("vcode"))
+@limiter.limit("30 per 1 minute", key_func=lambda: request.form.get("vcode"))
+def logincode_post():
+    lc = loginc_list.pop((int(request.form['code']), request.form['vcode'], request.form['email']), None)
+    if not lc:
+        return render_template("auth/logincode.html", email=request.form['email'], vcode=request.form['vcode'], status="That code is incorrect or has expired")
+    if lc[1] < datetime.now():
+        return render_template("auth/logincode.html", email=request.form['email'], vcode=request.form['vcode'], status="That code is incorrect or has expired")
+    user = User.query.get(lc[0])
     rs = redirect("/dashboard")
     rs.set_cookie(
         "abridgetoken",
-        luser.create_token().token,
+        user.create_token().token,
         httponly=True,
         samesite="Lax",
         secure=True,
@@ -64,12 +67,12 @@ def register_redir():
 @limiter.limit("10 per minute")
 @limiter.limit("60 per hour")
 def register_post():
-    scode = ev_list.get(request.form['email'])
+    scode = register_list.get(request.form['email'])
     if not scode:
         return redirect("/login")
     if scode[1] < datetime.now():
         logger.debug("[login] Removing expired register code for %s", request.form['email'])
-        ev_list.pop(request.form['email'], None)
+        register_list.pop(request.form['email'], None)
         return redirect("/login")
     if scode[0] != int(request.form['code']):
         return render_template("auth/requestcode.html", email=request.form['email'], status="Incorrect code")
@@ -84,7 +87,7 @@ def register_post():
 @limiter.limit("30 per hour")
 def register_finalpost():
     logger.debug("[login] Removing register code for %s", request.form['email'])
-    scode = ev_list.pop(request.form['email'], None)
+    scode = register_list.pop(request.form['email'], None)
     if not scode:
         return redirect("/login")
     if scode[1] < datetime.now():
@@ -99,7 +102,7 @@ def register_finalpost():
         return "An account was already made with this email!"
     luser = User.query.filter_by(username=request.form['uname']).first()
     if luser:
-        ev_list[request.form['email']] = (scode[0], datetime.now() + timedelta(minutes=5))
+        register_list[request.form['email']] = (scode[0], datetime.now() + timedelta(minutes=5))
         return render_template("auth/finalsetup.html", email=request.form['email'], code=scode[0], status=f"{request.form['uname']} is already taken")
     logger.debug("[auth] Creating user for %s", request.form['email'])
     user = User.create(email=request.form['email'], username=request.form['uname'], name=request.form['name'])
