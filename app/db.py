@@ -54,8 +54,8 @@ class User(db.Model):
         db.session.add(usr)
         db.session.commit()
         return usr
-    def edit(self, name: str=None, email: str=None, disable: bool=None, disableapps: bool=None):
-        logger.debug("[db] editing details for %s (%s): %s %s %s %s", self.name, self.username, name, email, disable, disableapps)
+    def edit(self, name: str=None, email: str=None, disable: bool=None, disable_apps: bool=None, allowed_apps: str|None=...):
+        logger.debug("[db] editing details for %s (%s): %s %s %s %s", self.name, self.username, name, email, disable, disable_apps)
         if name:
             if not re.fullmatch(name_regex, name):
                 logger.debug("[db] new name for %s failed verification", self.username)
@@ -65,8 +65,10 @@ class User(db.Model):
             self.email = email
         if disable is not None:
             self.disabled = disable
-        if disableapps is not None:
-            self.disable_app_create = disableapps
+        if disable_apps is not None:
+            self.disable_app_create = disable_apps
+        if allowed_apps != ...:
+            self.allowed_apps = allowed_apps
         db.session.commit()
         return self
 

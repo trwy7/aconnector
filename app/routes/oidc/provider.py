@@ -150,9 +150,9 @@ def auth_oidc_page():
     if not id_token_alg:
         return _oidc_error_redirect(redirect_uri, "invalid_request", state)
 
-    if not request.user:
-        logger.info("[oidc] login required client_id=%s", client.client_id)
-        return _oidc_error_redirect(redirect_uri, "login_required", state)
+    if request.user.allowed_apps is not None and client.client_id not in request.user.allowed_apps.split(","):
+        logger.debug("[oidc] user=%s is not allowed to access client_id=%s", request.user.username, client.client_id)
+        return render_template("templates/error.html", status_code=403, error_message=f"An administrator has restricted your account from accessing <b>{client.name}</b>. Contact <b>{app.config['CONTACT_EMAIL']}</b> for more information."), 403
 
     if request.user not in client.user_auths:
         logger.debug("[oidc] requesting user=%s access to client_id=%s", request.user.username, client.client_id)
@@ -215,9 +215,9 @@ def auth_oidc_post():
     if not id_token_alg:
         return _oidc_error_redirect(redirect_uri, "invalid_request", state)
 
-    if not request.user:
-        logger.info("[oidc] login required client_id=%s", client.client_id)
-        return _oidc_error_redirect(redirect_uri, "login_required", state)
+    if request.user.allowed_apps is not None and client.client_id not in request.user.allowed_apps.split(","):
+        logger.debug("[oidc] user=%s is not allowed to access client_id=%s", request.user.username, client.client_id)
+        return render_template("templates/error.html", status_code=403, error_message=f"An administrator has restricted your account from accessing <b>{client.name}</b>. Contact {app.config['CONTACT_EMAIL']} for more information."), 403
 
     if request.user not in client.user_auths:
         logger.debug("[oidc] granted user=%s access to client_id=%s", request.user.username, client.client_id)

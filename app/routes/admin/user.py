@@ -25,7 +25,8 @@ def admin_vuser_modify(userid):
         name=request.form['name'],
         email=request.form['email'],
         disable=request.form.get('disable') == 'on',
-        disableapps=request.form.get('disableapp') == 'on'
+        disable_apps=request.form.get('disableapp') == 'on',
+        allowed_apps=request.form['allowed_apps'] if request.form['allowed_apps'] != "all" else None
     )
     return redirect(request.path)
 

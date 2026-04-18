@@ -3,5 +3,5 @@
 {% block mainclasses %}hcenter{% endblock %}
 {% block content %}
 <h1>{{status_code}}</h1>
-<p>{{error_message}}</p>
+<p>{{error_message | safe}}</p>
 {% endblock %}

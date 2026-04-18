@@ -7,7 +7,7 @@ from app.utilities.users import require_user
 @require_user
 def create_app_page():
     if request.user.disable_app_create:
-        return render_template("templates/error.html", status_code=403, error_message=f"An administrator has restricted your account from creating apps. Contact {app.config['CONTACT_EMAIL']} for more information."), 403
+        return render_template("templates/error.html", status_code=403, error_message=f"An administrator has restricted your account from creating apps. Contact <b>{app.config['CONTACT_EMAIL']}</b> for more information."), 403
     da = App.create(
         request.user,
         "My new app"
