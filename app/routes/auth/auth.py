@@ -17,6 +17,9 @@ def login_page():
 @limiter.limit("1 per 5 seconds")
 @limiter.limit("5 per minute")
 @limiter.limit("20 per hour")
+@limiter.limit("1 per 5 seconds", key_func=lambda: request.form.get("email"))
+@limiter.limit("5 per minute", key_func=lambda: request.form.get("email"))
+@limiter.limit("20 per hour", key_func=lambda: request.form.get("email"))
 def login_post():
     luser = User.query.filter_by(email=request.form['email']).first()
     if luser:
