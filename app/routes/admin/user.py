@@ -28,3 +28,23 @@ def admin_vuser_modify(userid):
         disableapps=request.form.get('disableapp') == 'on'
     )
     return redirect(request.path)
+
+@app.route("/admin/users/create")
+@require_user
+def admin_create_user_page():
+    if request.user.level != 3:
+        return abort(403)
+    return render_template("admin/createuser.html")
+
+@app.route("/admin/users/create", methods=['POST'])
+@require_user
+def admin_create_user():
+    if request.user.level != 3:
+        return abort(403)
+    muser = User.create(
+        username=request.form['uname'],
+        name=request.form['name'],
+        email=request.form['email'],
+        disabled=request.form.get('disable') == 'on'
+    )
+    return redirect("/admin/user/" + muser.id)
