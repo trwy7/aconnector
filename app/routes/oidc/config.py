@@ -1,10 +1,10 @@
 from flask import request
 from app import app
 
-@app.route("/app/<string:clientid>/.well-known/openid-configuration")
-def app_oidcconf(clientid):
+@app.route("/.well-known/openid-configuration")
+def oidcconf():
     return {
-        "issuer": f"https://{request.host}/app/{clientid}",
+        "issuer": f"https://{request.host}",
         "authorization_endpoint": f"https://{request.host}/apps/auth",
         "token_endpoint": f"https://{request.host}/apps/token",
         "userinfo_endpoint": f"https://{request.host}/apps/userinfo",
