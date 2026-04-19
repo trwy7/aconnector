@@ -1,0 +1,21 @@
+{% extends "templates/base.html" %}
+{% block title %}Docs - OIDC{% endblock %}
+{% block content %}
+<h1>Authenticating with OpenID for beginners</h1>
+<p>This is a pretty simplified explination</p>
+<h2>Automatic</h2>
+<p>A lot of OIDC clients allow automatically configuring themselves from the discovery endpoint. The discovery endpoint is at <span class="code">GET /.well-known/openid-configuration</span>. Most OpenID Connect libraries should automatically configure themselves using either the discovery endpoint URL, or the issuer URL.</p>
+<p>Here is a list of available endpoints, keep in mind not all of these may be required by your client:</p>
+<ul>
+    <li>Issuer URL: https://{{host}}</li>
+    <li>Authorization URL: https://{{host}}/apps/auth</li>
+    <li>Token URL: https://{{host}}/apps/token</li>
+    <li>Userinfo URL: https://{{host}}/apps/userinfo</li>
+    <li>JWKS URL: https://{{host}}/apps/jwks</li>
+</ul>
+<h2>Manual</h2>
+<h3>1. Create an app</h3>
+<p>If you are seeing this, chances are, you already have! Now that you have an application, you should set the redirect url to the callback url for your application. This will be redirected to when a user accepts/denies the authorization. You should also set the launch url to the dashboard/home page of your site.</p>
+<h3>2. Redirect users</h3>
+<p>On your login page there should be a button that redirects users to the auth endpoint. The redirect should include your client id, redirect url, response type (always code for now), and scopes. Scopes are broken right now, but you should still only request what is needed.<br>An example redirect url would be <span class="code">https://{{host}}/apps/auth?client_id=your_client_id&redirect_uri=https%3A%2F%2Fexample.com%2Flogin%2Fcallback&response_type=code&scope=openid+profile+email</span>.</p>
+{% endblock %}

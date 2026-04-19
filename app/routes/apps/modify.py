@@ -21,7 +21,7 @@ def modify_app_page(clientid):
     if not ca:
         return abort(404)
     if request.user.level == 3 or ca.owner == request.user:
-        return render_template("apps/modify.html", app=ca, host=request.host)
+        return render_template("apps/modify.html", app=ca)
     return abort(403)
 
 @app.route("/app/<string:clientid>", methods=["POST"])

@@ -30,7 +30,7 @@ def auth():
 
 @app.context_processor
 def ctx_processor():
-    return {"gconfig": app.config, "user": request.user, "token": request.token}
+    return {"gconfig": app.config, "user": request.user, "token": request.token, "host": request.host}
 
 ## Init extensions
 logger.debug("Init extensions")
