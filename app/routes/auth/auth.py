@@ -14,7 +14,7 @@ loginc_list = {}
 def login_page():
     if request.user:
         return redirect("/dashboard")
-    return render_template("auth/login.html")
+    return render_template("auth/login.html", gota=request.args.get("gota"))
 
 @app.route("/login", methods=['POST'])
 @limiter.limit("1 per 5 seconds")
@@ -33,7 +33,7 @@ def login_post():
         vcode = random.randbytes(5).hex()
         loginc_list[(code, vcode, request.form['email'])] = (luser.id, datetime.now() + timedelta(minutes=5))
         email.send(request.form['email'], f"Welcome back, {luser.username}!", f"Your login code is {str(code)}, enter it to sign back in.\nThe code expires in 5 minutes.\nid: {vcode}")
-        return render_template("auth/logincode.html", email=request.form['email'], vcode=vcode)
+        return render_template("auth/logincode.html", email=request.form['email'], vcode=vcode, gota=request.form.get("gota"))
     else:
         if not re.fullmatch(app.config['VEMAIL_REGEX'], request.form['email']):
             logger.debug("[login] Email did not pass regex: %s", request.form['email'])
@@ -42,7 +42,7 @@ def login_post():
         if request.form['email'] not in register_list or register_list[request.form['email']][1] < datetime.now():
             register_list[request.form['email']] = (random.randint(100000, 999999), datetime.now() + timedelta(minutes=5))
         email.send(request.form['email'], f"Your {app.config['NAME']} resgistration code is {str(register_list[request.form['email']][0])}", f"Hello!\nYour code is: {str(register_list[request.form['email']][0])}.\nYour code expires in 5 minutes, if you did not request this email, you may discard it.")
-        return render_template("auth/requestcode.html", email=request.form['email'])
+        return render_template("auth/requestcode.html", email=request.form['email'], gota=request.form.get("gota"))
 
 @app.route("/loginc", methods=['POST'])
 @limiter.limit("5 per 4 seconds")
@@ -53,11 +53,11 @@ def logincode_post():
         return redirect("/dashboard")
     lc = loginc_list.pop((int(request.form['code']), request.form['vcode'], request.form['email']), None)
     if not lc:
-        return render_template("auth/logincode.html", email=request.form['email'], vcode=request.form['vcode'], status="That code is incorrect or has expired")
+        return render_template("auth/logincode.html", email=request.form['email'], vcode=request.form['vcode'], status="That code is incorrect or has expired", gota=request.form.get("gota"))
     if lc[1] < datetime.now():
-        return render_template("auth/logincode.html", email=request.form['email'], vcode=request.form['vcode'], status="That code is incorrect or has expired")
+        return render_template("auth/logincode.html", email=request.form['email'], vcode=request.form['vcode'], status="That code is incorrect or has expired", gota=request.form.get("gota"))
     user = User.query.get(lc[0])
-    rs = redirect("/dashboard")
+    rs = redirect("/dashboard") # TODO: add gota support (make sure to validate it though)
     rs.set_cookie(
         "abridgetoken",
         user.create_token().token,
@@ -87,11 +87,11 @@ def register_post():
         register_list.pop(request.form['email'], None)
         return redirect("/login")
     if scode[0] != int(request.form['code']):
-        return render_template("auth/requestcode.html", email=request.form['email'], status="Incorrect code")
+        return render_template("auth/requestcode.html", email=request.form['email'], status="Incorrect code", gota=request.form.get("gota"))
     luser = User.query.filter_by(email=request.form['email']).first()
     if luser:
         return "An account was already made with this email!"
-    return render_template("auth/finalsetup.html", email=request.form['email'], code=scode[0])
+    return render_template("auth/finalsetup.html", email=request.form['email'], code=scode[0], gota=request.form.get("gota"))
 
 @app.route("/finalregister", methods=['POST'])
 @limiter.limit("2 per 2 seconds")
@@ -117,10 +117,10 @@ def register_finalpost():
     luser = User.query.filter_by(username=request.form['uname']).first()
     if luser:
         register_list[request.form['email']] = (scode[0], datetime.now() + timedelta(minutes=5))
-        return render_template("auth/finalsetup.html", email=request.form['email'], code=scode[0], status=f"{request.form['uname']} is already taken")
+        return render_template("auth/finalsetup.html", email=request.form['email'], code=scode[0], status=f"{request.form['uname']} is already taken", gota=request.form.get("gota"))
     logger.debug("[auth] Creating user for %s", request.form['email'])
     user = User.create(email=request.form['email'], username=request.form['uname'], name=request.form['name'])
-    rs = redirect("/dashboard")
+    rs = redirect("/dashboard") # TODO: add gota support
     rs.set_cookie(
         "abridgetoken",
         user.create_token().token,

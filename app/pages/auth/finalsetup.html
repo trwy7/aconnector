@@ -4,6 +4,9 @@
 {% block content %}
 <h1>Final step</h1>
 <form action="finalregister" method="post" style="width: 400px;">
+    {% if gota %}
+    <input type="text" value="{{gota}}" name="gota" required readonly hidden>
+    {% endif %}
     <input type="email" value="{{email}}" name="email" required readonly hidden>
     <input type="tel" value="{{code}}" name="code" required readonly hidden>
     <label for="uname">Username</label>

@@ -5,6 +5,9 @@
 <h1>Login with another device</h1>
 <p>On your other device, go to account, then add a new device.</p>
 <form method="post" style="width: 400px;">
+    {% if gota %}
+    <input type="text" value="{{gota}}" name="gota" required readonly hidden>
+    {% endif %}
     <label for="uname">Username</label><br>
     <input type="text" name="uname" required><br>
     <label for="code">Code</label><br>

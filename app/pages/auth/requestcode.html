@@ -5,6 +5,9 @@
 <h1>Welcome!</h1>
 <form action="register" method="post" style="width: 400px;">
     <p>We sent a code to <!--email_off-->{{email}}<!--/email_off-->, enter it here.</p>
+    {% if gota %}
+    <input type="text" value="{{gota}}" name="gota" required readonly hidden>
+    {% endif %}
     <input type="email" value="{{email}}" name="email" required readonly hidden>
     <input type="tel" placeholder="123456" pattern="[0-9]*" maxlength="6" name="code" required style="width: 150px; letter-spacing: 0.3rem;">
     <input type="submit" id="submit" value="Continue" style="width: 125px;" class="main">
