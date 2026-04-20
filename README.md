@@ -8,6 +8,10 @@ A simple email -> openid connect bridge. Meant to be lighter then authentik in p
 - Compatible with most OIDC clients
 - Easy to setup
 
+## Docs
+
+Some extra documentation is available in `app/pages/help`
+
 ## Usage
 
 ### Warning
