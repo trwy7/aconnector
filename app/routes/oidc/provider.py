@@ -11,6 +11,7 @@ from flask import jsonify, redirect, request, render_template
 from app import app, logger
 from app.db import App, User, db
 from app.utilities.users import require_user
+from app.utilities.jwt import encode_jwt
 
 AUTH_CODE_TTL_SECONDS = 120
 ACCESS_TOKEN_TTL_SECONDS = 600
@@ -151,7 +152,7 @@ def auth_oidc_page():
         return _oidc_error_redirect(redirect_uri, "invalid_request", state)
 
     if not request.user:
-        return redirect("/login?gota=" + client_id)
+        return redirect("/login?gota=" + encode_jwt(request.path))
 
     if request.user.allowed_apps is not None and client.client_id not in request.user.allowed_apps.split(","):
         logger.debug("[oidc] user=%s is not allowed to access client_id=%s", request.user.username, client.client_id)
