@@ -142,9 +142,13 @@ input[type="submit"].danger, a.fakebutton.danger {
 input[type="submit"].danger:hover, a.fakebutton.danger:hover{
     background-color: hsl(5, 80%, 82%);
 }
-form.submitted.longrunning {
+form.submitted {
     margin-top: 20px;
     margin: 10px;
+    padding: 10px;
+    border: 1px solid;
+}
+form.submitted.longrunning {
     border: 3px solid;
     animation: formSubmitBorderAnim .5s ease infinite alternate;
 }
