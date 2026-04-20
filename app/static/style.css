@@ -47,7 +47,7 @@ body {
   gap:20px;
 }
 .app, .user {
-    background-color: hsl(147, 9%, 20%);
+    background-color: hsl(150, 8%, 18%);
     transition: background-color 0.2s;
     border-radius: 5px;
     padding: 15px;
@@ -115,24 +115,24 @@ a.fakebutton {
     font-size: .85rem;
     padding: 7px;
     border-radius: 5px;
-    background-color: hsl(120, 8%, 23%);
+    background-color: hsl(120, 8%, 31%);
     color: rgb(198, 244, 223);
     cursor: pointer;
     transition: background-color 0.3s;
-    border: 2px solid hsl(120, 8%, 31%);
+    border: 2px solid hsl(120, 8%, 48%);
     text-decoration: none;
     width: fit-content;
 }
 input[type="submit"]:hover, a.fakebutton:hover {
-    background-color: hsl(120, 13%, 33%);
+    background-color: hsl(120, 12%, 49%);
 }
 input[type="submit"].main, a.fakebutton.main {
     background-color: hsl(151, 49%, 90%);
-    border: 2px solid hsl(120, 49%, 82%);
+    border: 2px solid hsl(120, 10%, 58%);
     color: hsl(120, 7%, 11%);
 }
 input[type="submit"].main:hover, a.fakebutton.main:hover{
-    background-color: hsl(151, 29%, 55%);
+    background-color: hsl(150, 100%, 83%);
 }
 input[type="submit"].danger, a.fakebutton.danger {
     background-color: hsl(5, 60%, 55%);
