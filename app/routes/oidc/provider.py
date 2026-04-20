@@ -95,6 +95,7 @@ def _resolve_id_token_alg(client: App) -> str:
 
 
 def _build_id_token(client: App, user: User, nonce: str | None = None, alg: str = "RS256"):
+    # FIXME: respect scopes (and update documentation)
     now = _now()
     claims = {
         "iss": f"https://{request.host}/app/{client.client_id}",

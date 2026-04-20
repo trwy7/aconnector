@@ -3,8 +3,15 @@
 {% block content %}
 <h1>Authenticating with OpenID for beginners</h1>
 <p>This is a pretty simplified explination</p>
+<h2 id="scopes">Supported scopes</h2>
+<p>Three scopes are currently supported:</p>
+<ul>
+    <li>openid: Required for authentication</li>
+    <li>profile: Username and Display name</li>
+    <li>email: User email</li>
+</ul>
 <h2>Automatic</h2>
-<p>A lot of OIDC clients allow automatically configuring themselves from the discovery endpoint. The discovery endpoint is at <span class="code">GET /.well-known/openid-configuration</span>. Most OpenID Connect libraries should automatically configure themselves using either the discovery endpoint URL, or the issuer URL.</p>
+<p>A lot of OIDC clients allow automatically configuring themselves from the discovery endpoint. The discovery endpoint is at <code>GET /.well-known/openid-configuration</code>. Most OpenID Connect libraries should automatically configure themselves using either the discovery endpoint URL, or the issuer URL.</p>
 <p>Here is a list of available endpoints, keep in mind not all of these may be required by your client:</p>
 <ul>
     <li>Issuer URL: https://{{host}}</li>
@@ -13,9 +20,35 @@
     <li>Userinfo URL: https://{{host}}/apps/userinfo</li>
     <li>JWKS URL: https://{{host}}/apps/jwks</li>
 </ul>
+<p>You may need to look up your OIDC libraries redirect url and set it in your app.</p>
 <h2>Manual</h2>
 <h3>1. Create an app</h3>
 <p>If you are seeing this, chances are, you already have! Now that you have an application, you should set the redirect url to the callback url for your application. This will be redirected to when a user accepts/denies the authorization. You should also set the launch url to the dashboard/home page of your site.</p>
 <h3>2. Redirect users</h3>
-<p>On your login page there should be a button that redirects users to the auth endpoint. The redirect should include your client id, redirect url, response type (always code for now), and scopes. Scopes are broken right now, but you should still only request what is needed.<br>An example redirect url would be <span class="code">https://{{host}}/apps/auth?client_id=your_client_id&redirect_uri=https%3A%2F%2Fexample.com%2Flogin%2Fcallback&response_type=code&scope=openid+profile+email</span>.</p>
+<p>On your login page there should be a button that redirects users to the auth endpoint. The redirect should include your client id, redirect url, response type (always code for now), and scopes. Scopes are broken right now, but you should still only request what is needed.<br>An example redirect url would be <code>https://{{host}}/apps/auth?client_id=your_client_id&redirect_uri=https%3A%2F%2Fexample.com%2Flogin%2Fcallback&response_type=code&scope=openid+profile+email</code>. The scopes parameter determines what data your app needs. You may find supported scopes <a href="#scopes">here</a>.</p>
+<h3>3. Get tokens</h3>
+<p>After a user authorises with your app, they will be redirected to your redirect endpoint with a <code>code</code> parameter. To get user data, you must get a token using this code. Send a request to <code>POST https://{{host}}/apps/token</code> with this form body:</p>
+<pre><code>
+{
+    "grant_type": "authorization_code",
+    "client_id": "your_client_id",
+    "client_secret": "your_client_secret",
+    "redirect_uri": "your_redirect_uri",
+    "code": "?code"
+
+}
+</code></pre>
+<p>The response will look something like this:</p>
+<pre><code>
+{
+    "access_token": "123456...",
+    "id_token": "eyJhbGciOiJ...",
+    "token_type": "Bearer"
+
+}
+</code></pre>
+<h3>4. Getting user data</h3>
+<p>The ID token is a JWT that includes user data. You can decode it with a JWT library. You may also want to validate the token's signature. You can get the token signature from <code>GET https://{{host}}/apps/jwks</code> to validate the token.</p>
+<h3>5. Getting user data (alternate)</h3>
+<p>If you are not able to use the JWT, you can also get user data from <code>GET https://{{host}}/apps/userinfo</code> and including the access token in the Authorization header.</p>
 {% endblock %}
