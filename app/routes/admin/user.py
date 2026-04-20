@@ -49,3 +49,24 @@ def admin_create_user():
         disabled=request.form.get('disable') == 'on'
     )
     return redirect("/admin/user/" + muser.id)
+
+@app.route("/admin/user/<string:userid>/delete")
+@require_user
+def admin_vuser_del_page(userid):
+    if request.user.level != 3:
+        return abort(403)
+    muser = User.query.get(userid)
+    if not muser:
+        return abort(404)
+    return render_template("admin/deleteuser.html", auser=muser)
+
+@app.route("/admin/user/<string:userid>/delete", methods=['POST'])
+@require_user
+def admin_vuser_delete(userid):
+    if request.user.level != 3:
+        return abort(403)
+    muser = User.query.get(userid)
+    if not muser:
+        return abort(404)
+    muser.delete()
+    return redirect("/admin")

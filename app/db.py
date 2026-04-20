@@ -71,6 +71,13 @@ class User(db.Model):
             self.allowed_apps = allowed_apps
         db.session.commit()
         return self
+    def delete(self):
+        self.app_auths.clear()
+        for token in self.tokens:
+            token.delete()
+        self.tokens.clear()
+        db.session.delete(self)
+        db.session.commit()
 
 class Token(db.Model):
     token = db.Column(db.String(60), primary_key=True, default=lambda: random.randbytes(30).hex())
@@ -119,6 +126,7 @@ class App(db.Model):
         db.session.commit()
         return self
     def delete(self):
+        self.user_auths.clear()
         db.session.delete(self)
         db.session.commit()
 

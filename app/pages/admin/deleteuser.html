@@ -1,0 +1,14 @@
+{% extends "templates/base.html" %}
+{% block title %}Delete User{% endblock %}
+{% block mainclasses %}form{% endblock %}
+{% block content %}
+<h1>Delete {{auser.name}} ({{auser.username}})</h1>
+<p>Are you sure you want to delete "{{auser.name}}"? All data for them will be deleted, including their {{auser.apps | length }} apps.</p>
+<form method="post">
+    <label for="confirm1">Are you sure?</label>
+    <input type="checkbox" name="confirm1" required>
+    <label for="confirm2">I know this cannot be reversed.</label>
+    <input type="checkbox" name="confirm2" required>
+    <input type="submit" value="Delete">
+</form>
+{% endblock %}
