@@ -1,7 +1,8 @@
+from app.utilities.users import require_user
 import random
 import re
 from datetime import datetime, timedelta
-from flask import render_template, request, url_for, redirect
+from flask import render_template, request, redirect
 from app import app, logger, limiter
 from app.db import User, db
 from app.utilities import email
@@ -11,6 +12,8 @@ loginc_list = {}
 
 @app.route("/login")
 def login_page():
+    if request.user:
+        return redirect("/dashboard")
     return render_template("auth/login.html")
 
 @app.route("/login", methods=['POST'])
@@ -21,6 +24,8 @@ def login_page():
 @limiter.limit("2 per minute", key_func=lambda: request.form.get("email"))
 @limiter.limit("10 per hour", key_func=lambda: request.form.get("email"))
 def login_post():
+    if request.user:
+        return redirect("/dashboard")
     luser = User.query.filter_by(email=request.form['email']).first()
     if luser:
         logger.debug("[login] Found user for %s: %s. Sending email...", request.form['email'], luser.username)
@@ -44,6 +49,8 @@ def login_post():
 @limiter.limit("3 per 4 seconds", key_func=lambda: request.form.get("vcode"))
 @limiter.limit("30 per 1 minute", key_func=lambda: request.form.get("vcode"))
 def logincode_post():
+    if request.user:
+        return redirect("/dashboard")
     lc = loginc_list.pop((int(request.form['code']), request.form['vcode'], request.form['email']), None)
     if not lc:
         return render_template("auth/logincode.html", email=request.form['email'], vcode=request.form['vcode'], status="That code is incorrect or has expired")
@@ -70,6 +77,8 @@ def register_redir():
 @limiter.limit("10 per minute")
 @limiter.limit("60 per hour")
 def register_post():
+    if request.user:
+        return redirect("/dashboard")
     scode = register_list.get(request.form['email'])
     if not scode:
         return redirect("/login")
@@ -89,6 +98,8 @@ def register_post():
 @limiter.limit("15 per minute")
 @limiter.limit("30 per hour")
 def register_finalpost():
+    if request.user:
+        return redirect("/dashboard")
     logger.debug("[login] Removing register code for %s", request.form['email'])
     scode = register_list.pop(request.form['email'], None)
     if not scode:
@@ -121,7 +132,9 @@ def register_finalpost():
     return rs
 
 @app.route("/logout")
+@require_user
 def logout_route():
+    request.token.delete()
     rs = redirect("/login")
     rs.set_cookie(
         "abridgetoken",

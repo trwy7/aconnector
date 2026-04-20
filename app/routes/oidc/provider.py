@@ -116,7 +116,6 @@ def _build_id_token(client: App, user: User, nonce: str | None = None, alg: str 
 
 
 @app.route("/apps/auth")
-@require_user
 def auth_oidc_page():
     _purge_expired()
     client_id = request.args.get("client_id")
@@ -150,6 +149,9 @@ def auth_oidc_page():
     id_token_alg = _resolve_id_token_alg(client)
     if not id_token_alg:
         return _oidc_error_redirect(redirect_uri, "invalid_request", state)
+
+    if not request.user:
+        return redirect("/login?gota=" + client_id)
 
     if request.user.allowed_apps is not None and client.client_id not in request.user.allowed_apps.split(","):
         logger.debug("[oidc] user=%s is not allowed to access client_id=%s", request.user.username, client.client_id)

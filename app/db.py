@@ -77,6 +77,9 @@ class Token(db.Model):
     user_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref='tokens')
     expiry = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now() + timedelta(weeks=6))
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
 class App(db.Model):
     owner_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
