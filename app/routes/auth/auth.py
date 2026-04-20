@@ -6,6 +6,7 @@ from flask import render_template, request, redirect
 from app import app, logger, limiter
 from app.db import User, db
 from app.utilities import email
+from app.utilities.jwt import decode_jwt
 
 register_list = {}
 loginc_list = {}
@@ -57,7 +58,14 @@ def logincode_post():
     if lc[1] < datetime.now():
         return render_template("auth/logincode.html", email=request.form['email'], vcode=request.form['vcode'], status="That code is incorrect or has expired", gota=request.form.get("gota"))
     user = User.query.get(lc[0])
-    rs = redirect("/dashboard") # TODO: add gota support (make sure to validate it though)
+    if request.form.get("gota"):
+        gota_path = decode_jwt(request.form.get("gota"))['rt']
+        if gota_path.startswith("/"):
+            rs = redirect(gota_path)
+        else:
+            rs = redirect("/dashboard")
+    else:
+        rs = redirect("/dashboard")
     rs.set_cookie(
         "abridgetoken",
         user.create_token().token,
@@ -120,7 +128,14 @@ def register_finalpost():
         return render_template("auth/finalsetup.html", email=request.form['email'], code=scode[0], status=f"{request.form['uname']} is already taken", gota=request.form.get("gota"))
     logger.debug("[auth] Creating user for %s", request.form['email'])
     user = User.create(email=request.form['email'], username=request.form['uname'], name=request.form['name'])
-    rs = redirect("/dashboard") # TODO: add gota support
+    if request.form.get("gota"):
+        gota_path = decode_jwt(request.form.get("gota"))['rt']
+        if gota_path.startswith("/"):
+            rs = redirect(gota_path)
+        else:
+            rs = redirect("/dashboard")
+    else:
+        rs = redirect("/dashboard")
     rs.set_cookie(
         "abridgetoken",
         user.create_token().token,

@@ -152,7 +152,7 @@ def auth_oidc_page():
         return _oidc_error_redirect(redirect_uri, "invalid_request", state)
 
     if not request.user:
-        return redirect("/login?gota=" + encode_jwt(request.path))
+        return redirect("/login?gota=" + encode_jwt({"rt": request.full_path}))
 
     if request.user.allowed_apps is not None and client.client_id not in request.user.allowed_apps.split(","):
         logger.debug("[oidc] user=%s is not allowed to access client_id=%s", request.user.username, client.client_id)

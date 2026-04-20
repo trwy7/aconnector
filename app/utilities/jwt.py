@@ -26,5 +26,5 @@ jwt_key = load_key()
 def encode_jwt(payload):
     return jwt.encode({"alg": "RS256"}, payload, jwt_key).decode("utf-8")
 
-def decode_jwt(payload):
+def decode_jwt(payload): # Intentionally fails on invalid key
     return jwt.decode(payload, jwt_key)

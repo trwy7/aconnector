@@ -4,4 +4,7 @@
 {% block content %}
 <h1>Welcome back!</h1>
 <p>You have logged in as {{user.name}}.</p>
+{% if gota_path %}
+<a class="fakebutton" href="{{gota_path}}">Continue</a>
+{% endif %}
 {% endblock %}

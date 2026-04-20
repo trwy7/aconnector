@@ -4,6 +4,7 @@ from flask import render_template, request, make_response
 from app import app, limiter
 from app.db import User
 from app.utilities.users import require_user
+from app.utilities.jwt import decode_jwt
 
 code_list: dict[tuple[str, datetime], tuple[str, str]] = {}
 
@@ -23,7 +24,14 @@ def codelogin_post():
     luser = User.query.get(uid)
     if not luser:
         return "uh oh", 500
-    rs = make_response(render_template("auth/logincomplete.html", user=luser)) # TODO: Handle and validate gota
+    if request.form.get("gota"):
+        gota_path = decode_jwt(request.form.get("gota"))['rt']
+        if gota_path.startswith("/"):
+            rs = make_response(render_template("auth/logincomplete.html", user=luser, gota_path=gota_path))
+        else:
+            rs = make_response(render_template("auth/logincomplete.html", user=luser))
+    else:
+        rs = make_response(render_template("auth/logincomplete.html", user=luser))
     rs.set_cookie(
         "abridgetoken",
         luser.create_token().token,
