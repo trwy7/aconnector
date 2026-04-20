@@ -187,6 +187,16 @@ div.divider {
     margin: 0.5em;
     border-radius: 5px;
 }
+code {
+    border-radius: 4px;
+    background-color: hsl(120, 10%, 27%);
+}
+/* Mobile tweaks */
+@media (max-width: 650px) {
+    main {
+        text-align: center;
+    }
+}
 /* details style was partially stolen from mdn */
 details {
     border: 2px solid hsl(120, 6%, 33%);
