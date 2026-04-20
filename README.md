@@ -5,8 +5,10 @@ A simple email -> openid connect bridge. Meant to be lighter then authentik in p
 ## Features
 
 - Email authentication (passwordless)
-- Compatible with most OIDC clients
-- Easy to setup
+- Minimal user annoyance (Users should not need to interface with this site most of the time)
+- Compatible with most OIDC libraries
+- Simple to use
+- Easy to setup and administer
 
 ## Docs
 
