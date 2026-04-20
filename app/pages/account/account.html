@@ -2,8 +2,13 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 <h1>Hello, {{user.name}}!</h1>
-<a class="fakebutton" href="/account/namechange" style="margin: 0;">Change name</a>
-<form action="/account/getlogincode" method="post" style="width: fit-content;"><input type="submit" id="submit" value="Add a new device" style="margin: 0;"></form>
+<div style="display: flex; gap: 10px;">
+    <a class="fakebutton" href="/account/namechange" style="margin: 0;">Change name</a>
+    <form action="/account/getlogincode" method="post" style="width: fit-content; margin: 0;"><input type="submit" id="submit" value="Add a new device" style="margin: 0;"></form>
+    {% if (not user.disable_app_create) or (user.apps | length > 0) %}
+        <a class="fakebutton" href="/apps" style="margin: 0;">My apps</a>
+    {% endif %}
+</div>
 {% if user.app_auths | length > 0 %}
 <h2>Authorized apps</h2>
 <div id="apps">

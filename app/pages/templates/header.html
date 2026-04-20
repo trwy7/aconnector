@@ -2,9 +2,6 @@
     <ul>
         {% if user %}
             <li><a href="/dashboard">Dashboard</a></li>
-            {% if (not user.disable_app_create) or (user.apps | length > 0) %}
-                <li><a href="/apps">My apps</a></li>
-            {% endif %}
             <li><a href="/account">Account</a></li>
             {% if user.level > 0 %}
                 <li><a href="/admin">Admin</a></li>

@@ -120,7 +120,6 @@ a.fakebutton {
     cursor: pointer;
     transition: background-color 0.3s;
     border: 2px solid hsl(120, 8%, 31%);
-    min-width: 100px;
     text-decoration: none;
     width: fit-content;
 }
@@ -195,6 +194,7 @@ code {
 @media (max-width: 650px) {
     main {
         text-align: center;
+        align-items: center;
     }
 }
 /* details style was partially stolen from mdn */
