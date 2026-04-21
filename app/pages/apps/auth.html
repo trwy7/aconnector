@@ -3,7 +3,7 @@
 {% block mainclasses %}form{% endblock %}
 {% block content %}
 <h1>Sign in to {{app.name}}</h1>
-<p><b>{{app.name}}</b> is owned by <b>{{app.owner.username}}</b>. This app will be able to see your name, username, and email.</p>
+<p><b>{{app.name}}</b> is owned by <b>{{app.owner.username}}</b>. This app will be able to see your display name, username, and email.</p>
 <!-- TODO: Dynamically update requirements list -->
 <form method="post" class="longrunning">
     <input type="submit" id="submit" name="choice" value="Allow" class="main">
