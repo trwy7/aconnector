@@ -2,7 +2,7 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 <h1>Hello, {{user.name}}!</h1>
-<p>This is a demo build, congrats on logging in! If you just want to test further, you can try <a style="text-decoration: underline;" href="https://authbridge.trwy.dev/apps/auth?client_id=dcd442f143c374b17a1b&redirect_uri=https%3A%2F%2Foidcdebugger.com%2Fdebug&scope=openid&response_type=code&response_mode=query">this demo app</a>. If you want to test creating an application, create an app here, go to https://oidcdebugger.com, and test the flow out.</p>
+<p>This is a demo build, congrats on logging in! If you just want to test further, you can try <a style="text-decoration: underline;" href="https://{{host}}/apps/auth?client_id=0d55256170faeef98c34&redirect_uri=https%3A%2F%2Foidcdebugger.com%2Fdebug&scope=openid&response_type=code&response_mode=query">this demo app</a>. If you want to test creating an application, go to Account, create an app, go to https://oidcdebugger.com, and test the creation flow out.</p>
 {% if user.app_auths | length > 0 %}
 <h2>Apps</h2>
 <div id="apps">
