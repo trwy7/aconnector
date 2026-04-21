@@ -10,8 +10,8 @@ db = SQLAlchemy(app)
 user_app_association = db.Table(
     "user_app_link",
     db.Model.metadata,
-    db.Column("user_id", db.ForeignKey('user.id'), primary_key=True),
-    db.Column("app_id", db.ForeignKey('app.client_id'), primary_key=True)
+    db.Column("user_id", db.ForeignKey('user.id', ondelete="CASCADE"), primary_key=True),
+    db.Column("app_id", db.ForeignKey('app.client_id', ondelete="CASCADE"), primary_key=True)
 )
 
 username_regex = re.compile(r"[a-z0-9\-]{3,20}")
@@ -25,6 +25,8 @@ class User(db.Model):
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     name = db.Column(db.String(40), nullable=False)
+    apps = db.relationship('App', back_populates='owner', cascade="all, delete-orphan")
+    tokens = db.relationship('Token', back_populates='user', cascade="all, delete-orphan")
     disabled = db.Column(db.Boolean, nullable=False, default=False)
     disable_app_create = db.Column(db.Boolean, nullable=False, default=False)
     allowed_apps = db.Column(db.Text, nullable=True, default=None)
@@ -72,17 +74,13 @@ class User(db.Model):
         db.session.commit()
         return self
     def delete(self):
-        self.app_auths.clear()
-        for token in self.tokens:
-            token.delete()
-        self.tokens.clear()
         db.session.delete(self)
         db.session.commit()
 
 class Token(db.Model):
     token = db.Column(db.String(60), primary_key=True, default=lambda: random.randbytes(30).hex())
     user_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
-    user = db.relationship('User', backref='tokens')
+    user = db.relationship('User', back_populates='tokens')
     expiry = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now() + timedelta(weeks=6))
     def delete(self):
         db.session.delete(self)
@@ -90,7 +88,7 @@ class Token(db.Model):
 
 class App(db.Model):
     owner_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
-    owner = db.relationship('User', backref='apps')
+    owner = db.relationship('User', back_populates='apps')
     name = db.Column(db.String(80), unique=False, nullable=False)
     client_id = db.Column(db.String(20), primary_key=True, default=lambda: random.randbytes(10).hex())
     client_secret = db.Column(db.String(80), default=lambda: random.randbytes(40).hex())
@@ -126,7 +124,6 @@ class App(db.Model):
         db.session.commit()
         return self
     def delete(self):
-        self.user_auths.clear()
         db.session.delete(self)
         db.session.commit()
 
