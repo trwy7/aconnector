@@ -9,6 +9,7 @@ A simple email -> openid connect bridge. Meant to be lighter then authentik in p
 - Compatible with most OIDC libraries
 - Simple to use
 - Easy to setup and administer
+- Limit signup to a specific email regex
 
 ## Docs
 
