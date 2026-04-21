@@ -95,8 +95,7 @@ def _resolve_id_token_alg(client: App) -> str:
     return requested_alg or "RS256"
 
 
-def _build_id_token(client: App, user: User, nonce: str | None = None, alg: str = "RS256"):
-    # FIXME: respect scopes (and update documentation)
+def _build_id_token(client: App, user: User, nonce: str | None = None, alg: str = "RS256", scopes: set[str] = {}):
     now = _now()
     claims = {
         "iss": f"https://{request.host}/app/{client.client_id}",
@@ -105,10 +104,12 @@ def _build_id_token(client: App, user: User, nonce: str | None = None, alg: str 
         "iat": int(now.timestamp()),
         "exp": int((now + timedelta(seconds=ACCESS_TOKEN_TTL_SECONDS)).timestamp()),
         "auth_time": int(now.timestamp()),
-        "email": user.email,
-        "name": user.name,
-        "preferred_username": user.username,
     }
+    if "email" in scopes:
+        claims["email"] = user.email
+    if "profile" in scopes:
+        claims["name"] = user.name
+        claims["preferred_username"] = user.username
     if nonce:
         claims["nonce"] = nonce
     if alg == "HS256":
@@ -284,7 +285,7 @@ def token_oidc_page():
     }
 
     id_token_alg = code_data.get("id_token_alg", "RS256")
-    id_token = _build_id_token(client, user, code_data.get("nonce"), id_token_alg)
+    id_token = _build_id_token(client, user, code_data.get("nonce"), id_token_alg, set(code_data["scope"].split()))
     logger.info("[oidc] issued tokens for user=%s client_id=%s id_token_alg=%s", user.username, client.client_id, id_token_alg)
     return jsonify({
         "access_token": access_token,

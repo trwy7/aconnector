@@ -4,11 +4,7 @@
 {% block content %}
 <h1>Sign in to {{app.name}}</h1>
 <p><b>{{app.name}}</b> is owned by <b>{{app.owner.username}}</b>. This app will be able to see your name, username, and email.</p>
-<!-- Hi developer, while the scopes may not contain some of these, the token endpoint returns them anyway.
- Some OIDC implementations wont work without them in the token endpoint, so we keep them.
- Scopes are still respected in the userinfo endpoint, just not the token endpoint.
- From https://openid.net/specs/openid-connect-core-1_0.html#ScopeClaims, it looks like this is sometimes intentional
- but I would need to implement id_token as a response_type and right now it dosen't check.-->
+<!-- TODO: Dynamically update requirements list -->
 <form method="post" class="longrunning">
     <input type="submit" id="submit" name="choice" value="Allow" class="main">
     <input type="submit" id="submit" name="choice" value="Deny" value="denied">

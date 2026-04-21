@@ -4,14 +4,14 @@ import re
 from datetime import datetime, timedelta
 from flask import render_template, request, redirect
 from app import app, logger, limiter
-from app.db import User, db
+from app.db import User
 from app.utilities import email
 from app.utilities.jwt import decode_jwt
 
 register_list = {}
 loginc_list = {}
 
-def _cleanup():
+def _cleanup(): # TODO: test
     now = datetime.now()
     # Login codes
     td = []
