@@ -18,8 +18,6 @@ Some extra documentation is available in `app/pages/help`
 
 ### Warning
 
-This app is meant for use as a community tool, where one person hosts it and everyone in a group can use it. This means every authenticated user can make their own OIDC client.
-
 **All cookes are stored with the secure header, reguardless of whether the request was made securly. You should setup a reverse proxy, like caddy.**
 
 ### Setup
@@ -42,6 +40,7 @@ services:
       CONTACT_EMAIL: contact@example.com # An email that is displayed on some access denied pages
       VEMAIL_REGEX: ".*@.*\\..*" # The regex that all emails must follow.
       VEMAIL_MESSAGE: "" # The message that is shown on the login page, set this if you have a custom email regex
+      LOCK_NEW_APP_CREATE: true # This only applies at user creation, set to "false" to allow every newly created user to create their own OIDC client.
 ```
 
 Run it with `docker compose up -d --build`. A reverse proxy that supports SSL is required, make it proxy to port 7035.

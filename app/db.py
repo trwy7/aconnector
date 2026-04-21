@@ -45,7 +45,8 @@ class User(db.Model):
             username=username,
             name=name,
             level=0 if email != app.config['OWNER_EMAIL'] else 3,
-            disabled=disabled
+            disabled=disabled,
+            disable_app_create=app.config['LOCK_NEW_USER_APP_CREATE']
         )
         db.session.add(usr)
         db.session.commit()

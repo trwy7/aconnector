@@ -19,6 +19,7 @@ app.config['OWNER_EMAIL'] = os.environ.get("OWNER_EMAIL", "")
 app.config['CONTACT_EMAIL'] = os.environ.get("CONTACT_EMAIL", "")
 app.config['VEMAIL_REGEX'] = re.compile(os.environ.get("VEMAIL_REGEX", ""))
 app.config['VEMAIL_MESSAGE'] = os.environ.get("VEMAIL_MESSAGE", "")
+app.config['LOCK_NEW_USER_APP_CREATE'] = os.environ.get("LOCK_NEW_APP_CREATE", "true").lower() != "false"
 
 from .utilities import users
 @app.before_request
