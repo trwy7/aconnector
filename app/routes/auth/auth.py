@@ -11,18 +11,18 @@ from app.utilities.jwt import decode_jwt
 register_list = {}
 loginc_list = {}
 
-def _cleanup(): # TODO: test
+def _cleanup():
     now = datetime.now()
     # Login codes
     td = []
-    for tdv, (_, ed) in loginc_list:
+    for tdv, (_, ed) in loginc_list.items():
         if ed < now:
             td.append(tdv)
     for tdv in td:
         loginc_list.pop(tdv, None)
     # Register codes
     td = []
-    for tdv, (_, ed) in register_list:
+    for tdv, (_, ed) in register_list.items():
         if ed < now:
             td.append(tdv)
     for tdv in td:
