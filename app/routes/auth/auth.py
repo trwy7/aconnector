@@ -11,8 +11,26 @@ from app.utilities.jwt import decode_jwt
 register_list = {}
 loginc_list = {}
 
+def _cleanup():
+    now = datetime.now()
+    # Login codes
+    td = []
+    for tdv, (_, ed) in loginc_list:
+        if ed < now:
+            td.append(tdv)
+    for tdv in td:
+        loginc_list.pop(tdv, None)
+    # Register codes
+    td = []
+    for tdv, (_, ed) in register_list:
+        if ed < now:
+            td.append(tdv)
+    for tdv in td:
+        register_list.pop(tdv, None)
+
 @app.route("/login")
 def login_page():
+    _cleanup()
     if request.user:
         return redirect("/dashboard")
     return render_template("auth/login.html", gota=request.args.get("gota"))
@@ -25,6 +43,7 @@ def login_page():
 @limiter.limit("2 per minute", key_func=lambda: request.form.get("email"))
 @limiter.limit("10 per hour", key_func=lambda: request.form.get("email"))
 def login_post():
+    _cleanup()
     if request.user:
         return redirect("/dashboard")
     luser = User.query.filter_by(email=request.form['email']).first()
@@ -50,6 +69,7 @@ def login_post():
 @limiter.limit("3 per 4 seconds", key_func=lambda: request.form.get("vcode"))
 @limiter.limit("30 per 1 minute", key_func=lambda: request.form.get("vcode"))
 def logincode_post():
+    _cleanup()
     if request.user:
         return redirect("/dashboard")
     lc = loginc_list.pop((int(request.form['code']), request.form['vcode'], request.form['email']), None)
@@ -85,6 +105,7 @@ def register_redir():
 @limiter.limit("10 per minute")
 @limiter.limit("60 per hour")
 def register_post():
+    _cleanup()
     if request.user:
         return redirect("/dashboard")
     scode = register_list.get(request.form['email'])
@@ -106,6 +127,7 @@ def register_post():
 @limiter.limit("15 per minute")
 @limiter.limit("30 per hour")
 def register_finalpost():
+    _cleanup()
     if request.user:
         return redirect("/dashboard")
     logger.debug("[login] Removing register code for %s", request.form['email'])
@@ -149,6 +171,7 @@ def register_finalpost():
 @app.route("/logout")
 @require_user
 def logout_route():
+    _cleanup()
     request.token.delete()
     rs = redirect("/login")
     rs.set_cookie(
