@@ -25,5 +25,5 @@ def ratelimited(e):
 @app.errorhandler(500)
 @app.errorhandler(Exception)
 def internal_server_error(e):
-    logger.error("In request for %s: %s", request.path, str(e), exc_info=e)
+    logger.error("Request for '%s' has failed: %s", request.path, str(e), exc_info=e)
     return render_template("templates/error.html", status_code=500, error_message="Internal server error"), 500
