@@ -1,9 +1,12 @@
-import os
 import json
-from app import logger
+import os
+
 from authlib.jose import JsonWebKey, jwt
 
+from app import logger
+
 JWT_KEY_PATH = "/data/signing_key.json"
+
 
 def load_key():
     try:
@@ -21,10 +24,13 @@ def load_key():
         logger.info("[jwt] generated new general signing key")
         return signing_key
 
+
 jwt_key = load_key()
+
 
 def encode_jwt(payload):
     return jwt.encode({"alg": "RS256"}, payload, jwt_key).decode("utf-8")
 
-def decode_jwt(payload): # Intentionally fails on invalid key
+
+def decode_jwt(payload):  # Intentionally fails on invalid key
     return jwt.decode(payload, jwt_key)

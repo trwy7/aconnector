@@ -1,5 +1,6 @@
-from flask import request
 from app import app
+from app.types import request
+
 
 @app.route("/.well-known/openid-configuration")
 def oidcconf():
@@ -14,5 +15,8 @@ def oidcconf():
         "grant_types_supported": ["authorization_code"],
         "subject_types_supported": ["public"],
         "id_token_signing_alg_values_supported": ["HS256", "RS256"],
-        "token_endpoint_auth_methods_supported": ["client_secret_post", "client_secret_basic"],
+        "token_endpoint_auth_methods_supported": [
+            "client_secret_post",
+            "client_secret_basic",
+        ],
     }

@@ -1,6 +1,8 @@
 from flask import render_template
+
 from app import app
 from app.utilities import users
+
 
 @app.route("/dashboard")
 @users.require_user

@@ -1,9 +1,12 @@
-from flask import redirect, abort, request
+from flask import abort, redirect
+
 from app import app
 from app.db import App, db
+from app.types import request
 from app.utilities.users import require_user
 
-@app.route("/app/<string:clientid>/revoke", methods=['POST'])
+
+@app.route("/app/<string:clientid>/revoke", methods=["POST"])
 @require_user
 def revoke_app(clientid):
     ca = App.query.get(clientid)

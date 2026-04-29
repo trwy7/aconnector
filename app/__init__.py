@@ -3,9 +3,11 @@ import logging
 import os
 import re
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+
+from app.types import request
 
 # Init logger
 logging.basicConfig(level=logging.DEBUG)
@@ -77,4 +79,4 @@ for root, _, files in os.walk(rdir):
                 .replace(".py", "")
             )
             logger.debug("Init route %s", fd)
-            importlib.import_module(fd)
+            _ = importlib.import_module(fd)
