@@ -28,7 +28,7 @@ def _load_oidc_signing_key():
     try:
         with open(OIDC_SIGNING_KEY_PATH, "r", encoding="utf-8") as key_file:
             key_data = json.load(key_file)
-        logger.info("[oidc] loaded persisted signing key")
+        logger.info("[oidc] loaded OIDC signing key")
         return JsonWebKey.import_key(key_data)
     except FileNotFoundError:
         signing_key = JsonWebKey.generate_key("RSA", 2048, is_private=True)
@@ -38,7 +38,7 @@ def _load_oidc_signing_key():
         with open(temp_path, "w", encoding="utf-8") as key_file:
             json.dump(key_data, key_file)
         os.replace(temp_path, OIDC_SIGNING_KEY_PATH)
-        logger.info("[oidc] generated new persisted signing key")
+        logger.info("[oidc] generated new OIDC signing key")
         return signing_key
 
 
@@ -119,7 +119,7 @@ def _build_id_token(
     user: User,
     nonce: str | None = None,
     alg: str = "RS256",
-    scopes: set[str] = {},
+    scopes: set[str] = set(),
 ):
     now = _now()
     claims = {

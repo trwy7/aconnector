@@ -26,7 +26,7 @@ app.config["LOCK_NEW_USER_APP_CREATE"] = (
     os.environ.get("LOCK_NEW_APP_CREATE", "true").lower() != "false"
 )
 
-from .utilities import users
+from .utilities import users  # noqa: E402 # This position is required
 
 
 @app.before_request
