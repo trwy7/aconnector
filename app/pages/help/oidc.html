@@ -9,6 +9,11 @@
     <li>openid: Required for authentication</li>
     <li>profile: Username and Display name</li>
     <li>email: User email</li>
+    <li>groups: Includes a list of attributes related to the user</li>
+    <ul>
+        <li>owner: The user owns the app (probably you)</li>
+        <li>userwhitelisted: The user has an app whitelist, and your app is on the list</li>
+    </ul>
 </ul>
 <h2>Automatic</h2>
 <p>A lot of OIDC clients allow automatically configuring themselves from the discovery endpoint. The discovery endpoint is at <code>GET /.well-known/openid-configuration</code>. Most OpenID Connect libraries should automatically configure themselves using either the discovery endpoint URL, or the issuer URL.</p>
