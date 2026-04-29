@@ -317,6 +317,11 @@ def userinfo_oidc_page():
         logger.warning("[oidc] userinfo user not found")
         return jsonify({"error": "invalid_token"}), 401
 
+    app = App.query.get(token_data["client_id"])
+    if not app:
+        logger.warning("[oidc] userinfo client not found")
+        return jsonify({"error": "invalid_token"}), 401
+
     scopes = set(token_data["scope"].split()) if token_data["scope"] else set()
     claims = {"sub": user.id}
     if "email" in scopes:
@@ -325,6 +330,12 @@ def userinfo_oidc_page():
     if "profile" in scopes:
         claims["name"] = user.name
         claims["preferred_username"] = user.username
+    if "groups" in scopes:
+        claims["groups"] = []
+        if app.owner_id == user.id:
+            claims["groups"].append("owner")
+        if user.allowed_apps is not None and app.client_id in user.allowed_apps.split(","):
+            claims["groups"].append("userwhitelisted")
 
     return jsonify(claims)
 
