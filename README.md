@@ -28,7 +28,7 @@ Create a folder, and create a `docker-compose.yml` within it with these contents
 ```yml
 services:
   authbridge:
-    image: ghcr.io
+    image: ghcr.io/trwy7/aconnector:1.0.0
     ports:
       - 7035:7035
     volumes:
