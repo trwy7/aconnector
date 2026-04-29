@@ -34,7 +34,7 @@ def ctx_processor():
     return {"gconfig": app.config, "user": request.user, "token": request.token, "host": request.host}
 
 ## Init extensions
-logger.debug("Init extensions")
+logger.debug("Init flask extensions")
 limiter = Limiter(
     get_remote_address,
     app=app,

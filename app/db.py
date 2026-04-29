@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy(app)
 
-user_app_association = db.Table(
+user_app_association = db.Table( # TODO: Save scopes and dynamically update auth page on new scope requests
     "user_app_link",
     db.Model.metadata,
     db.Column("user_id", db.ForeignKey('user.id', ondelete="CASCADE"), primary_key=True),
@@ -75,6 +75,7 @@ class User(db.Model):
         db.session.commit()
         return self
     def delete(self):
+        logger.info("[db] Deleting user %s (%s) with ID %s", self.name, self.email, self.id)
         db.session.delete(self)
         db.session.commit()
 
@@ -84,6 +85,7 @@ class Token(db.Model):
     user = db.relationship('User', back_populates='tokens')
     expiry = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now() + timedelta(weeks=6))
     def delete(self):
+        logger.info("[db] Deleting token for %s", self.user.username)
         db.session.delete(self)
         db.session.commit()
 
@@ -110,7 +112,7 @@ class App(db.Model):
         db.session.commit()
         return capp
     def reroll_secret(self):
-        logger.debug("[db] rerolling secret for %s (%s)", self.name, self.client_id)
+        logger.debug("[db] rerolling client secret for %s (%s)", self.name, self.client_id)
         self.client_secret = random.randbytes(40).hex()
         db.session.commit()
         return self
@@ -125,6 +127,7 @@ class App(db.Model):
         db.session.commit()
         return self
     def delete(self):
+        logger.info("[db] Deleting app %s (%s)", self.name, self.client_id)
         db.session.delete(self)
         db.session.commit()
 
