@@ -30,7 +30,7 @@
     <input type="checkbox" name="disableapp" {% if auser.disable_app_create %}checked{%endif%}>
     <label for="allowed_apps"><b>Allowed apps</b></label>
     <p style="font-size: 0.8em;">A list of app client ids the user can authenticate with, seperated by commas, or "all" to allow all</p>
-    <!-- If someone has a better way I can implement this input, please make an issue! -->
+    <!-- If someone has a better way I can implement this list input, please make an issue! -->
     <input type="text" placeholder="id1,id2,id3" value="{% if auser.allowed_apps is not none %}{{auser.allowed_apps}}{% else %}all{% endif %}" name="allowed_apps" required>
     <input type="submit" id="submit" value="Save" class="main">
 </form>

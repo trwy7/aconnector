@@ -19,9 +19,49 @@ Some extra documentation is available in `app/pages/help`
 
 ### Warning
 
-**All cookes are stored with the secure header, reguardless of whether the request was made securly. You should setup a reverse proxy, like caddy.**
+**All cookes are stored with the secure header, reguardless of whether the request was made securly. You need a reverse proxy that supports SSL (like caddy), or logins will not work.**
 
 ### Setup
+
+Create a folder, and create a `docker-compose.yml` within it with these contents:
+
+```yml
+services:
+  authbridge:
+    image: ghcr.io
+    ports:
+      - 7035:7035
+    volumes:
+      - acdata:/data
+    hostname: authbridge
+    stop_signal: SIGINT
+    stop_grace_period: 1s
+    environment:
+      APP_NAME: AuthBridge # Used across the app, feel free to make it whatever
+      EMAIL_PASSWORD: 123456 # SMTP information
+      EMAIL_USERNAME: user # SMTP information
+      EMAIL_HOST: mail.example.com # SMTP information
+      EMAIL_PORT: 2525 # SMTP information
+      EMAIL_FROM: authbridge@example.com # SMTP information
+      OWNER_EMAIL: abadmin@example.com # Your personal admin email address, gets extra permissions
+      CONTACT_EMAIL: contact@example.com # An email that is displayed on some access denied pages
+      VEMAIL_REGEX: ".*@.*\\..*" # The regex that all emails must follow when creating an account, does not apply to existing users
+      VEMAIL_MESSAGE: "" # A message that is shown on the login page, should be used to guide users if there is a custom email regex
+      LOCK_NEW_APP_CREATE: true # Only affects new users, set to "false" to allow every newly created user to create their own OIDC client.
+
+volumes:
+  acdata:
+```
+
+Edit the file to fit your needs
+
+Run it with `docker compose up -d --build`.
+
+Set up a reverse proxy for port 7035 and make sure it has a valid certificate.
+
+Go to the proxied domain and login with the owner email you set earlier!
+
+### Dev Setup
 
 A docker compose is provided, however you need to set some things yourself.
 
@@ -39,9 +79,9 @@ services:
       EMAIL_FROM: authbridge@example.com # SMTP information
       OWNER_EMAIL: abadmin@example.com # Your personal admin email address, gets extra permissions
       CONTACT_EMAIL: contact@example.com # An email that is displayed on some access denied pages
-      VEMAIL_REGEX: ".*@.*\\..*" # The regex that all emails must follow.
-      VEMAIL_MESSAGE: "" # The message that is shown on the login page, set this if you have a custom email regex
-      LOCK_NEW_APP_CREATE: true # This only applies at user creation, set to "false" to allow every newly created user to create their own OIDC client.
+      VEMAIL_REGEX: ".*@.*\\..*" # The regex that all emails must follow when creating an account, does not apply to existing users
+      VEMAIL_MESSAGE: "" # A message that is shown on the login page, should be used to guide users if there is a custom email regex
+      LOCK_NEW_APP_CREATE: true # Only affects new users, set to "false" to allow every newly created user to create their own OIDC client.
 ```
 
 Run it with `docker compose up -d --build`. A reverse proxy that supports SSL is required, make it proxy to port 7035.

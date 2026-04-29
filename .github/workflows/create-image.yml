@@ -28,5 +28,5 @@ jobs:
       - name: Build and publish a Docker image to ghcr
         uses: macbre/push-to-ghcr@master
         with:
-          image_name: authbridge
+          image_name: ${{ github.repository }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
