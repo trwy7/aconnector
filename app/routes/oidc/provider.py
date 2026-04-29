@@ -176,7 +176,6 @@ def auth_oidc_page():
         "exp": _now() + timedelta(seconds=AUTH_CODE_TTL_SECONDS),
     }
 
-    #db.session.commit()
     logger.info("[oidc] issued authorization code for user=%s client_id=%s", request.user.username, client.client_id)
     return redirect(f"{redirect_uri}?{urlencode({'code': code, 'state': state} if state else {'code': code})}")
 
