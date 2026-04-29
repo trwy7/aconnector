@@ -16,5 +16,5 @@
 </form><br>
 <span style="font-size: .8em;">{{status}}</span>
 <div class="divider"></div>
-<a class="fakebutton" href="/codelogin{% if gota %}?gota={{gota}}{% endif %}">Login via another device</a>
+<a class="fakebutton" href="/login/code{% if gota %}?gota={{gota}}{% endif %}">Login via another device</a>
 {% endblock %}

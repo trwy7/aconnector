@@ -8,11 +8,11 @@ from app.utilities.jwt import decode_jwt
 
 code_list: dict[tuple[str, datetime], tuple[str, str]] = {}
 
-@app.route("/codelogin")
+@app.route("/login/code")
 def codelogin_page():
     return render_template("auth/codelogin.html", gota=request.args.get("gota"))
 
-@app.route("/codelogin", methods=['POST'])
+@app.route("/login/code", methods=['POST'])
 @limiter.limit("1 per 2 seconds", key_func=lambda: request.form.get("uname"))
 @limiter.limit("5 per minute", key_func=lambda: request.form.get("uname"))
 @limiter.limit("20 per hour", key_func=lambda: request.form.get("uname"))
