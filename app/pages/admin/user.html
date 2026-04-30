@@ -12,6 +12,7 @@
                 <span class="main">{{appl.app.name}}</span><br>
                 <span class="secondary">Owned by {{appl.app.owner.name}} ({{appl.app.owner.username}})</span><br>
                 <span class="secondary">{{appl.app.user_links | length}} users</span><br>
+                <span class="secondary">Authed on {{appl.created_at.strftime("%Y-%m-%d %H:%M:%S")}}</span>
             </div>
         {% endfor %}
     </div>
