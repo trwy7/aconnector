@@ -2,14 +2,13 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 <h1>Hello, {{user.name}}!</h1>
-<p>This is a demo instance, congrats on logging in! You should try using <a style="text-decoration: underline; font-weight: bold;" href="https://{{host}}/apps/auth?client_id=0d55256170faeef98c34&redirect_uri=https%3A%2F%2Foidcdebugger.com%2Fdebug&scope=openid&response_type=code&response_mode=query">this demo app</a>.<br>If you want to test creating an application, go to Account, create an app, go to https://oidcdebugger.com, and test the creation flow out.</p>
-{% if user.app_auths | length > 0 %}
+{% if user.app_links | length > 0 %}
 <h2>Apps</h2>
 <div id="apps">
-    {% for app in user.app_auths %}
-        <a class="app" href="{{app.launch_url}}">
-            <span class="main">{{app.name}}</span><br>
-            <span class="secondary">Owned by {{app.owner.username}}</span>
+    {% for appl in user.app_links %}
+        <a class="app" href="{{appl.app.launch_url}}">
+            <span class="main">{{appl.app.name}}</span><br>
+            <span class="secondary">Owned by {{appl.app.owner.username}}</span>
         </a>
     {% endfor %}
 </div>

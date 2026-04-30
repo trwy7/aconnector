@@ -7,22 +7,38 @@ from types import EllipsisType
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.ext.associationproxy import association_proxy
 
 from . import app, logger
 
 db = SQLAlchemy(app)
 
-user_app_association = db.Table(  # TODO: Save scopes and dynamically update auth page on new scope requests
-    "user_app_link",
-    db.Model.metadata,
-    Column("user_id", ForeignKey("user.id", ondelete="CASCADE"), primary_key=True),  # pyright: ignore[reportUnknownArgumentType]
-    Column("app_id", ForeignKey("app.client_id", ondelete="CASCADE"), primary_key=True),  # pyright: ignore[reportUnknownArgumentType]
-)
-
 username_regex = re.compile(r"[a-z0-9\-]{3,20}")
 name_regex = re.compile(r"[A-Za-z ]{3,40}")
 appname_regex = re.compile(r"[A-Za-z ]{3,80}")
 
+
+class UserAppLink(db.Model):
+    __tablename__ = "user_app_link"
+    
+    user_id = Column(ForeignKey("user.id", ondelete="CASCADE"), primary_key=True)
+    app_id = Column(ForeignKey("app.client_id", ondelete="CASCADE"), primary_key=True)
+
+    scopes = Column(db.String(500), nullable=False) 
+    created_at = Column(DateTime, default=datetime.now, nullable=False)
+
+    user = db.relationship("User", back_populates="app_links")
+    app = db.relationship("App", back_populates="user_links")
+    def revoke(self):
+        logger.info(
+            "[db] Deleting userapplink for %s to %s", self.user.username, self.app.client_id
+        )
+        db.session.delete(self)
+        db.session.commit()
+    def setscopes(self, scopes: set):
+        logger.debug("[db] Changing scopes for user %s for app %s: %s", self.user.username, self.app.client_id, str(scopes))
+        self.scopes = " ".join(scopes)
+        db.session.commit()
 
 class User(db.Model):
     id: Mapped[str] = mapped_column(
@@ -46,9 +62,7 @@ class User(db.Model):
         Boolean, nullable=False, default=False
     )
     allowed_apps: Mapped[str | None] = mapped_column(Text, nullable=True, default=None)
-    app_auths: Mapped[list["App"]] = relationship(
-        "App", secondary=user_app_association, back_populates="user_auths"
-    )
+    app_links: Mapped[list["UserAppLink"]] = relationship("UserAppLink", back_populates="user")
 
     @staticmethod
     def create(email: str, username: str, name: str, disabled: bool = False):
@@ -111,6 +125,16 @@ class User(db.Model):
         db.session.commit()
         return self
 
+    def authorize(self, app: App, scopes: set):
+        logger.debug("[db] Authorizing %s for %s: %s", self.username, app.client_id, str(scopes))
+        nauth = UserAppLink(
+            user=self,
+            app=app,
+            scopes=" ".join(scopes)
+        )
+        db.session.add(nauth)
+        db.session.commit()
+
     def delete(self):
         logger.info(
             "[db] Deleting user %s (%s) with ID %s", self.name, self.email, self.id
@@ -155,9 +179,8 @@ class App(db.Model):
     launch_url: Mapped[str] = mapped_column(
         String(200), default="https://example.com/login/oidc"
     )
-    user_auths: Mapped[list["User"]] = relationship(
-        "User", secondary=user_app_association, back_populates="app_auths"
-    )
+    user_links: Mapped[list["UserAppLink"]] = relationship("UserAppLink", back_populates="app")
+    users = association_proxy("user_links", "user")
 
     @staticmethod
     def create(owner: User, name: str):

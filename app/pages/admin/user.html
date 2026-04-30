@@ -5,16 +5,13 @@
 <h1>Modify {{auser.name}} ({{auser.username}})</h1>
 <details>
   <summary>Auths</summary>
-  <p>This user has authenticated with {{auser.app_auths | length}} apps.</p>
+  <p>This user has authenticated with {{auser.app_links | length}} apps.</p>
   <div id="apps">
-        {% for app in auser.app_auths %}
+        {% for appl in auser.app_links %}
             <div class="app">
-                <span class="main">{{app.name}}</span><br>
-                <span class="secondary">Owned by {{app.owner.name}} ({{app.owner.username}})</span><br>
-                <span class="secondary">{{app.user_auths | length}} users</span><br>
-                <a class="fakebutton main" href="{{app.launch_url}}">Launch</a>
-                <a class="fakebutton" href="/app/{{app.client_id}}">Modify</a>
-                <a class="fakebutton danger" href="/app/{{app.client_id}}/delete">Delete</a>
+                <span class="main">{{appl.app.name}}</span><br>
+                <span class="secondary">Owned by {{appl.app.owner.name}} ({{appl.app.owner.username}})</span><br>
+                <span class="secondary">{{appl.app.user_links | length}} users</span><br>
             </div>
         {% endfor %}
     </div>

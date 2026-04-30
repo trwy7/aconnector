@@ -10,7 +10,7 @@ from authlib.jose import JsonWebKey, jwt
 from flask import jsonify, redirect, render_template
 
 from app import app, logger
-from app.db import App, User, db
+from app.db import App, User, db, UserAppLink
 from app.types import request
 from app.utilities.jwt import encode_jwt
 from app.utilities.users import require_user
@@ -211,13 +211,17 @@ def auth_oidc_page():
             error_message=f"An administrator has restricted your account from accessing <b>{client.name}</b>. Contact <b>{app.config['CONTACT_EMAIL']}</b> for more information.",
         ), 403
 
-    if request.user not in client.user_auths:
+    link = UserAppLink.query.filter_by(
+        app_id=client_id, 
+        user_id=request.user.id
+    ).first()
+    if not link or not requested_scopes.issubset(set(link.scopes.split())):
         logger.debug(
             "[oidc] requesting user=%s access to client_id=%s",
             request.user.username,
             client.client_id,
         )
-        return render_template("apps/auth.html", app=client)
+        return render_template("apps/auth.html", app=client, scopes=requested_scopes)
 
     logger.debug(
         "[oidc] user=%s is re-accessing client_id=%s",
@@ -280,6 +284,7 @@ def auth_oidc_post():
         return _oidc_error_redirect(redirect_uri, "unsupported_response_type", state)
 
     requested_scopes = set(scope.split()) if scope else set()
+    # FIXME: Verify all requested scopes
     if "openid" not in requested_scopes:
         logger.warning("[oidc] missing openid scope for client_id=%s", client.client_id)
         return _oidc_error_redirect(redirect_uri, "invalid_scope", state)
@@ -313,14 +318,26 @@ def auth_oidc_post():
             error_message=f"An administrator has restricted your account from accessing <b>{client.name}</b>. Contact {app.config['CONTACT_EMAIL']} for more information.",
         ), 403
 
-    if request.user not in client.user_auths:
+    link = UserAppLink.query.filter_by(
+        app_id=client_id, 
+        user_id=request.user.id
+    ).first()
+    if not link:
         logger.debug(
-            "[oidc] granted user=%s access to client_id=%s",
+            "[oidc] granted user=%s access to client_id=%s with scopes=%s", 
             request.user.username,
             client.client_id,
+            str(requested_scopes)
         )
-        client.user_auths.append(request.user)
-        db.session.commit()
+        request.user.authorize(client, requested_scopes)
+    if not requested_scopes.issubset(set(link.scopes.split())):
+        logger.debug(
+            "[oidc] granted user=%s access to client_id=%s with new scopes=%s", 
+            request.user.username,
+            client.client_id,
+            str(requested_scopes)
+        )
+        link.setscopes(requested_scopes)
 
     code = secrets.token_urlsafe(32)
     auth_codes[code] = {

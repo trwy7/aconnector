@@ -9,7 +9,7 @@
         <div class="app">
             <span class="main">{{app.name}}</span><br>
             <span class="secondary">Owned by {{app.owner.username}} ({{app.owner.name}})</span><br>
-            <span class="secondary">{{app.user_auths | length}} authed users</span><br>
+            <span class="secondary">{{app.user_links | length}} authed users</span><br>
             <a class="fakebutton main" href="/app/{{app.client_id}}">Modify</a>
             <a class="fakebutton" href="{{app.launch_url}}">Open</a>
             <a class="fakebutton danger" href="/app/{{app.client_id}}/delete">Delete</a>

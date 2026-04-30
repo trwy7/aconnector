@@ -9,14 +9,14 @@
         <a class="fakebutton" href="/apps" style="margin: 0;">My apps</a>
     {% endif %}
 </div>
-{% if user.app_auths | length > 0 %}
+{% if user.app_links | length > 0 %}
 <h2>Authorized apps</h2>
 <div id="apps">
-    {% for app in user.app_auths %}
-        <a class="app" href="{{app.launch_url}}">
-            <span class="main">{{app.name}}</span><br>
+    {% for appl in user.app_links %}
+        <a class="app" href="{{appl.app.launch_url}}">
+            <span class="main">{{appl.app.name}}</span><br>
             <span class="secondary">Owned by {{app.owner.username}}</span>
-            <form class="action" action="/app/{{app.client_id}}/revoke" method="post"><input type="submit" id="submit" value="Revoke access" style="margin: 0;"></form>{# I dislike needing to use a form here, but atleast it dosent use javascript! #}
+            <form class="action" action="/app/{{appl.app.client_id}}/revoke" method="post"><input type="submit" id="submit" value="Revoke access" style="margin: 0;"></form>{# I dislike needing to use a form here, but atleast it dosent use javascript! #}
         </a>
     {% endfor %}
 </div>
