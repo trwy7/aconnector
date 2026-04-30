@@ -65,25 +65,29 @@ Congrats! Feel free to make an app or invite other users.
 
 ### Dev Setup
 
-A docker compose is provided, however you need to set some things yourself.
+Development is also done with docker
 
-Create a file named docker-compose.override.yml and fill out these contents:
+A docker compose is provided in the repo, however you need to set some environment variables.
+
+Create a file named docker-compose.override.yml and fill out these contents, these are the same as production, but smtp info is not required:
 
 ```yml
 services:
   authbridge:
     environment:
       APP_NAME: AuthBridge # Used across the app, feel free to make it whatever
-      EMAIL_PASSWORD: 123456 # SMTP information
-      EMAIL_USERNAME: user # SMTP information
-      EMAIL_HOST: mail.example.com # SMTP information
-      EMAIL_PORT: 2525 # SMTP information
-      EMAIL_FROM: authbridge@example.com # SMTP information
-      OWNER_EMAIL: abadmin@example.com # Your personal admin email address, gets extra permissions
+      EMAIL_PASSWORD: 123456 # SMTP information (optional in development)
+      EMAIL_USERNAME: user # SMTP information (optional in development)
+      EMAIL_HOST: mail.example.com # SMTP information (optional in development)
+      EMAIL_PORT: 2525 # SMTP information (optional in development)
+      EMAIL_FROM: authbridge@example.com # SMTP information (optional in development)
+      OWNER_EMAIL: abadmin@example.com # Your personal admin/dev email address, gets extra permissions
       CONTACT_EMAIL: contact@example.com # An email that is displayed on some access denied pages
       VEMAIL_REGEX: ".*@.*\\..*" # The regex that all emails must follow when creating an account, does not apply to existing users
       VEMAIL_MESSAGE: "" # A message that is shown on the login page, should be used to guide users if there is a custom email regex
       LOCK_NEW_APP_CREATE: true # Only affects new users, set to "false" to allow every newly created user to create their own OIDC client.
 ```
 
-Run it with `docker compose up -d --build`. A reverse proxy that supports SSL is required, make it proxy to port 7035.
+If you don't provide smtp information, emails will be printed to the logs
+
+Run it with `docker compose up --build`. A reverse proxy that supports SSL is required (even in development because cookies are always set with `secure` as true), make it proxy to port 7035.
