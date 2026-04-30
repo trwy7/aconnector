@@ -57,9 +57,11 @@ Edit the file to fit your needs
 
 Run it with `docker compose up -d --build`.
 
-Set up a reverse proxy for port 7035 and make sure it has a valid certificate.
+Set up a reverse proxy for port 7035 and make sure it has a valid certificate, proxying at a path will not work, it must be the root (e.g. `https://auth.example.com` or `https://example.com`, not `https://example.com/path/auth`, if you do not know what this means, you should be fine)
 
-Go to the proxied domain and login with the owner email you set earlier!
+Go to your domain and login with the owner email you set earlier.
+
+Congrats! Feel free to make an app or invite other users.
 
 ### Dev Setup
 

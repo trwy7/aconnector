@@ -1,14 +1,20 @@
 {% extends "templates/base.html" %} {% block title %}Docs - OIDC{% endblock %}
 {% block mainclasses %}docs{% endblock %} {% block content %}
-<h1>Authenticating with OpenID for beginners</h1>
-<p>This is a pretty simplified explination</p>
-<h2 id="scopes">Supported scopes</h2>
-<p>Three scopes are currently supported:</p>
+<h1>Authenticating with OpenID Connect for beginners</h1>
+<p>
+    This is a pretty simplified explination, better resources may be available
+    elsewhere.
+</p>
+<h2 id="scopes">Supported OIDC scopes</h2>
+<p>Four scopes are currently supported:</p>
 <ul>
     <li>openid: Required for authentication</li>
     <li>profile: Username and Display name</li>
     <li>email: User email</li>
-    <li>groups: Includes a list of attributes related to the user</li>
+    <li>
+        groups: Includes a list of attributes related to the user, you usually
+        won't need these
+    </li>
     <ul>
         <li>owner: The user owns the app (probably you)</li>
         <li>
@@ -19,9 +25,10 @@
 </ul>
 <h2>Automatic</h2>
 <p>
-    A lot of OIDC clients allow automatically configuring themselves from the
-    discovery endpoint. The discovery endpoint is at
-    <code>GET /.well-known/openid-configuration</code>. Most OpenID Connect
+    Most OIDC clients allow automatically configuring themselves from the
+    discovery endpoint or issuer url. The discovery endpoint is at
+    <code>https://{{host}}/.well-known/openid-configuration</code>, and the
+    issuer url is at <code>https://{{host}}</code>. Most OpenID Connect
     libraries should automatically configure themselves using either the
     discovery endpoint URL, or the issuer URL.
 </p>
@@ -30,11 +37,15 @@
     required by your client:
 </p>
 <ul>
-    <li>Issuer URL: https://{{host}}</li>
-    <li>Authorization URL: https://{{host}}/apps/auth</li>
-    <li>Token URL: https://{{host}}/apps/token</li>
-    <li>Userinfo URL: https://{{host}}/apps/userinfo</li>
-    <li>JWKS URL: https://{{host}}/apps/jwks</li>
+    <li>Issuer URL: <code>https://{{host}}</code></li>
+    <li>
+        Discovery endpoint:
+        <code>https://{{host}}/.well-known/openid-configuration</code>
+    </li>
+    <li>Authorization URL: <code>https://{{host}}/apps/auth</code></li>
+    <li>Token URL: <code>https://{{host}}/apps/token</code></li>
+    <li>Userinfo URL: <code>https://{{host}}/apps/userinfo</code></li>
+    <li>JWKS URL: <code>https://{{host}}/apps/jwks</code></li>
 </ul>
 <p>
     You may need to look up your OIDC libraries redirect url and set it in your
@@ -73,10 +84,14 @@
     "client_id": "your_client_id",
     "client_secret": "your_client_secret",
     "redirect_uri": "your_redirect_uri",
-    "code": "?code"
+    "code": "flow_returned_auth_code"
 }
 </code></pre>
 </div>
+<p>
+    Remember that all fields except <code>grant_type</code> will need to be
+    modified by your app
+</p>
 <p>The response will look something like this:</p>
 <div class="code">
     <pre><code>{
@@ -87,16 +102,20 @@
 </code></pre>
 </div>
 <h3>4. Getting user data</h3>
+<h4>4a. Userinfo</h4>
 <p>
-    The ID token is a JWT that includes user data. You can decode it with a JWT
-    library. You may also want to validate the token's signature. You can get
-    the token signature from <code>GET https://{{host}}/apps/jwks</code> to
-    validate the token.
-</p>
-<h3>5. Getting user data (alternate)</h3>
-<p>
-    If you are not able to use the JWT, you can also get user data from
+    You can get user data from
     <code>GET https://{{host}}/apps/userinfo</code> and including the access
     token in the Authorization header.
+</p>
+<h4>4a. ID Token</h4>
+<p>
+    You may also get some user data via the ID token. The ID token is a JWT that
+    includes some user data, but not as much as the userinfo endpoint. Use this
+    when you need to send data to the client quickly, and do not want to wait
+    for the extra userinfo request. You can decode it with a JWT library. You
+    may also want to validate the token's signature. You can get the token
+    signature from <code>GET https://{{host}}/apps/jwks</code> to validate the
+    token.
 </p>
 {% endblock %}
