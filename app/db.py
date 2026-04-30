@@ -134,6 +134,7 @@ class User(db.Model):
         )
         db.session.add(nauth)
         db.session.commit()
+        return nauth
 
     def delete(self):
         logger.info(

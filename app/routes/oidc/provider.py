@@ -357,7 +357,7 @@ def auth_oidc_post():
             str(requested_scopes)
         )
         request.user.authorize(client, requested_scopes)
-    if not requested_scopes.issubset(set(link.scopes.split())):
+    elif not requested_scopes.issubset(set(link.scopes.split())):
         logger.debug(
             "[oidc] granted user=%s access to client_id=%s with new scopes=%s", 
             request.user.username,
