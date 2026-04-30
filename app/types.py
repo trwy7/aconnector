@@ -7,8 +7,8 @@ from app.db import Token, User
 
 
 class AuthRequest(Request):
-    user: User | None
-    token: Token | None
+    user: User  # Technically can be None but that breaks type checking so we dont do it
+    token: Token
 
 
 if TYPE_CHECKING:
