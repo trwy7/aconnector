@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 * {
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 header {
     background-color: hsl(147, 9%, 20%);
@@ -35,18 +35,20 @@ a {
     color: rgb(198, 244, 223);
 }
 body {
-    font-family: 'Inter', 'Roboto', 'Arial', sans-serif;
+    font-family: "Inter", "Roboto", "Arial", sans-serif;
     color: rgb(198, 244, 223);
     padding-top: 40px;
     background-color: hsl(120, 3%, 7%);
     margin: 0;
 }
-#apps, #users {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
-  gap:20px;
+#apps,
+#users {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
 }
-.app, .user {
+.app,
+.user {
     background-color: hsl(150, 8%, 18%);
     transition: background-color 0.2s;
     border-radius: 5px;
@@ -55,18 +57,21 @@ body {
     font-size: 1.5em;
     font-weight: bold;
 }
-.app > .secondary, .user > .secondary {
-    font-size: .7em;
+.app > .secondary,
+.user > .secondary {
+    font-size: 0.7em;
 }
-a.app:hover, a.user:hover {
+a.app:hover,
+a.user:hover {
     background-color: hsl(150, 11%, 36%);
 }
 main {
-    display:flex;
+    display: flex;
     padding: 16px;
     flex-direction: column;
 }
-main.hcenter, main.form {
+main.hcenter,
+main.form {
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -74,13 +79,13 @@ main.hcenter, main.form {
     -webkit-box-orient: vertical;
     -webkit-box-pack: center;
     -webkit-box-align: center;
-    display:flex;
+    display: flex;
 }
 input {
     text-align: center;
 }
 form > label {
-    margin: 0.5rem
+    margin: 0.5rem;
 }
 main.form > h1 {
     padding-top: 20px;
@@ -88,17 +93,17 @@ main.form > h1 {
 }
 form {
     margin-top: 10px;
-	display: flex;
-	flex-direction: column;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     border-radius: 10px;
     transition: all 0.2s;
 }
-input[type='text'],
-input[type='email'],
-input[type='password'],
-input[type='number'],
-input[type='tel'],
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
 textarea {
     padding: 0.5rem;
     margin: 0.5rem;
@@ -109,10 +114,10 @@ textarea {
 }
 input[type="submit"],
 a.fakebutton {
-    margin: .5rem;
+    margin: 0.5rem;
     margin-top: 10px;
     margin-bottom: 10px;
-    font-size: .85rem;
+    font-size: 0.85rem;
     padding: 7px;
     border-radius: 5px;
     background-color: hsl(120, 8%, 31%);
@@ -123,23 +128,28 @@ a.fakebutton {
     text-decoration: none;
     width: fit-content;
 }
-input[type="submit"]:hover, a.fakebutton:hover {
+input[type="submit"]:hover,
+a.fakebutton:hover {
     background-color: hsl(120, 12%, 49%);
 }
-input[type="submit"].main, a.fakebutton.main {
+input[type="submit"].main,
+a.fakebutton.main {
     background-color: hsl(151, 49%, 90%);
     border: 2px solid hsl(120, 10%, 58%);
     color: hsl(120, 7%, 11%);
 }
-input[type="submit"].main:hover, a.fakebutton.main:hover{
+input[type="submit"].main:hover,
+a.fakebutton.main:hover {
     background-color: hsl(150, 100%, 83%);
 }
-input[type="submit"].danger, a.fakebutton.danger {
+input[type="submit"].danger,
+a.fakebutton.danger {
     background-color: hsl(5, 60%, 55%);
     border: 2px solid hsl(5, 87%, 72%);
     color: rgb(198, 244, 223);
 }
-input[type="submit"].danger:hover, a.fakebutton.danger:hover{
+input[type="submit"].danger:hover,
+a.fakebutton.danger:hover {
     background-color: hsl(5, 80%, 82%);
 }
 form.submitted {
@@ -150,7 +160,7 @@ form.submitted {
 }
 form.submitted.longrunning {
     border: 3px solid;
-    animation: formSubmitBorderAnim .5s ease infinite alternate;
+    animation: formSubmitBorderAnim 0.5s ease infinite alternate;
 }
 #loadbar {
     transform: height 1s;
@@ -160,7 +170,12 @@ form.submitted.longrunning {
     height: 0px;
     width: 100vw;
     z-index: 5000;
-    background: linear-gradient(to left, hsl(150, 10%, 27%), hsl(120, 49%, 82%), hsl(150, 10%, 27%));
+    background: linear-gradient(
+        to left,
+        hsl(150, 10%, 27%),
+        hsl(120, 49%, 82%),
+        hsl(150, 10%, 27%)
+    );
     background-size: 200% 100%;
 }
 body:has(form.submitted.longrunning) > #loadbar {
@@ -190,9 +205,37 @@ div.divider {
     margin: 0.5em;
     border-radius: 5px;
 }
-code {
+code,
+div.code {
     border-radius: 4px;
     background-color: hsl(120, 10%, 27%);
+}
+div.code pre {
+    margin: 10px;
+    width: fit-content;
+}
+div.code {
+    margin: 10px 3px;
+    width: fit-content;
+    border: 2px solid hsl(120, 15%, 50%);
+}
+main.docs ul {
+    padding: 5px 20px;
+}
+main.docs {
+    padding: 20px 200px;
+}
+main.docs h1 {
+    padding: 20px 0;
+}
+main.docs h2 {
+    padding: 17px 0;
+}
+main.docs h3 {
+    padding: 14px 0;
+}
+main.docs p {
+    padding: 10px 0;
 }
 /* Mobile tweaks */
 @media (max-width: 650px) {
@@ -209,18 +252,18 @@ details {
     margin-top: 10px;
 }
 summary {
-  font-weight: bold;
-  margin: -0.5em -0.5em 0;
-  padding: 0.5em;
-  cursor: pointer;
+    font-weight: bold;
+    margin: -0.5em -0.5em 0;
+    padding: 0.5em;
+    cursor: pointer;
 }
 
 details[open] {
-  padding: 0.5em;
+    padding: 0.5em;
 }
 details[open] summary {
-  border-bottom: 2px solid hsl(120, 4%, 18%);
-  margin-bottom: 0.5em;
+    border-bottom: 2px solid hsl(120, 4%, 18%);
+    margin-bottom: 0.5em;
 }
 details div.divider {
     width: 100%;
@@ -229,4 +272,6 @@ details div.divider {
     margin: 0.5em;
     border-radius: 0;
 }
-#loadOverlay {display: none;}
+#loadOverlay {
+    display: none;
+}
