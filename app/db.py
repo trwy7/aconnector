@@ -5,6 +5,8 @@ from datetime import datetime, timedelta
 from types import EllipsisType
 
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from . import app, logger
 
@@ -13,12 +15,8 @@ db = SQLAlchemy(app)
 user_app_association = db.Table(  # TODO: Save scopes and dynamically update auth page on new scope requests
     "user_app_link",
     db.Model.metadata,
-    db.Column(
-        "user_id", db.ForeignKey("user.id", ondelete="CASCADE"), primary_key=True
-    ),
-    db.Column(
-        "app_id", db.ForeignKey("app.client_id", ondelete="CASCADE"), primary_key=True
-    ),
+    Column("user_id", ForeignKey("user.id", ondelete="CASCADE"), primary_key=True),  # pyright: ignore[reportUnknownArgumentType]
+    Column("app_id", ForeignKey("app.client_id", ondelete="CASCADE"), primary_key=True),  # pyright: ignore[reportUnknownArgumentType]
 )
 
 username_regex = re.compile(r"[a-z0-9\-]{3,20}")
@@ -27,20 +25,28 @@ appname_regex = re.compile(r"[A-Za-z ]{3,80}")
 
 
 class User(db.Model):
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    level = db.Column(db.Integer, default=0)  # 0=user, 3=superadmin
-    username = db.Column(db.String(20), unique=True, nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
-    name = db.Column(db.String(40), nullable=False)
-    apps = db.relationship("App", back_populates="owner", cascade="all, delete-orphan")
-    tokens = db.relationship(
+    id: Mapped[str] = mapped_column(
+        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, nullable=False, default=datetime.now
+    )
+    level: Mapped[int] = mapped_column(Integer, default=0)  # 0=user, 3=superadmin
+    username: Mapped[str] = mapped_column(String(20), unique=True, nullable=False)
+    email: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
+    name: Mapped[str] = mapped_column(String(40), nullable=False)
+    apps: Mapped[list["App"]] = relationship(
+        "App", back_populates="owner", cascade="all, delete-orphan"
+    )
+    tokens: Mapped[list["Token"]] = relationship(
         "Token", back_populates="user", cascade="all, delete-orphan"
     )
-    disabled = db.Column(db.Boolean, nullable=False, default=False)
-    disable_app_create = db.Column(db.Boolean, nullable=False, default=False)
-    allowed_apps = db.Column(db.Text, nullable=True, default=None)
-    app_auths = db.relationship(
+    disabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    disable_app_create: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=False
+    )
+    allowed_apps: Mapped[str | None] = mapped_column(Text, nullable=True, default=None)
+    app_auths: Mapped[list["App"]] = relationship(
         "App", secondary=user_app_association, back_populates="user_auths"
     )
 
@@ -114,13 +120,15 @@ class User(db.Model):
 
 
 class Token(db.Model):
-    token = db.Column(
-        db.String(60), primary_key=True, default=lambda: random.randbytes(30).hex()
+    token: Mapped[str] = mapped_column(
+        String(60), primary_key=True, default=lambda: random.randbytes(30).hex()
     )
-    user_id = db.Column(db.String(36), db.ForeignKey("user.id"), nullable=False)
-    user = db.relationship("User", back_populates="tokens")
-    expiry = db.Column(
-        db.DateTime, nullable=False, default=lambda: datetime.now() + timedelta(weeks=6)
+    user_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("user.id"), nullable=False
+    )
+    user: Mapped["User"] = relationship("User", back_populates="tokens")
+    expiry: Mapped[datetime] = mapped_column(
+        DateTime, nullable=False, default=lambda: datetime.now() + timedelta(weeks=6)
     )
 
     def delete(self):
@@ -130,18 +138,24 @@ class Token(db.Model):
 
 
 class App(db.Model):
-    owner_id = db.Column(db.String(36), db.ForeignKey("user.id"), nullable=False)
-    owner = db.relationship("User", back_populates="apps")
-    name = db.Column(db.String(80), unique=False, nullable=False)
-    client_id = db.Column(
-        db.String(20), primary_key=True, default=lambda: random.randbytes(10).hex()
+    owner_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("user.id"), nullable=False
     )
-    client_secret = db.Column(db.String(80), default=lambda: random.randbytes(40).hex())
-    redirect_url = db.Column(
-        db.String(200), default="https://example.com/oidc/redirect"
+    owner: Mapped["User"] = relationship("User", back_populates="apps")
+    name: Mapped[str] = mapped_column(String(80), unique=False, nullable=False)
+    client_id: Mapped[str] = mapped_column(
+        String(20), primary_key=True, default=lambda: random.randbytes(10).hex()
     )
-    launch_url = db.Column(db.String(200), default="https://example.com/login/oidc")
-    user_auths = db.relationship(
+    client_secret: Mapped[str] = mapped_column(
+        String(80), default=lambda: random.randbytes(40).hex()
+    )
+    redirect_url: Mapped[str] = mapped_column(
+        String(200), default="https://example.com/oidc/redirect"
+    )
+    launch_url: Mapped[str] = mapped_column(
+        String(200), default="https://example.com/login/oidc"
+    )
+    user_auths: Mapped[list["User"]] = relationship(
         "User", secondary=user_app_association, back_populates="app_auths"
     )
 
