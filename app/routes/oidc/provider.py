@@ -14,6 +14,7 @@ from app.db import App, User, db, UserAppLink
 from app.types import request
 from app.utilities.jwt import encode_jwt
 from app.utilities.users import require_user
+from app.utilities.ext import readable_scopes
 
 AUTH_CODE_TTL_SECONDS = 120
 ACCESS_TOKEN_TTL_SECONDS = 600
@@ -189,6 +190,18 @@ def auth_oidc_page():
         )
         return _oidc_error_redirect(redirect_uri, "invalid_scope", state)
 
+    rrscopes: set = set()
+
+    for rc in requested_scopes:
+        if not rc in readable_scopes:
+            logger.warning(
+                "[oidc] invalid scope requested client_id=%s",
+                client.client_id,
+            )
+            return _oidc_error_redirect(redirect_uri, "invalid_scope", state)
+        if readable_scopes[rc]:
+            rrscopes.add(readable_scopes[rc])
+
     id_token_alg = _resolve_id_token_alg(client)
     if not id_token_alg:
         return _oidc_error_redirect(redirect_uri, "invalid_request", state)
@@ -221,7 +234,7 @@ def auth_oidc_page():
             request.user.username,
             client.client_id,
         )
-        return render_template("apps/auth.html", app=client, scopes=requested_scopes)
+        return render_template("apps/auth.html", app=client, scopes=rrscopes)
 
     logger.debug(
         "[oidc] user=%s is re-accessing client_id=%s",
@@ -284,10 +297,24 @@ def auth_oidc_post():
         return _oidc_error_redirect(redirect_uri, "unsupported_response_type", state)
 
     requested_scopes = set(scope.split()) if scope else set()
-    # FIXME: Verify all requested scopes
     if "openid" not in requested_scopes:
         logger.warning("[oidc] missing openid scope for client_id=%s", client.client_id)
         return _oidc_error_redirect(redirect_uri, "invalid_scope", state)
+    if "offline_access" in requested_scopes:
+        logger.warning(
+            "[oidc] offline_access requested but unsupported client_id=%s",
+            client.client_id,
+        )
+        return _oidc_error_redirect(redirect_uri, "invalid_scope", state)
+
+    for rc in requested_scopes:
+        if not rc in readable_scopes:
+            logger.warning(
+                "[oidc] invalid scope requested client_id=%s",
+                client.client_id,
+            )
+            return _oidc_error_redirect(redirect_uri, "invalid_scope", state)
+        
     if "offline_access" in requested_scopes:
         logger.warning(
             "[oidc] offline_access requested but unsupported client_id=%s",

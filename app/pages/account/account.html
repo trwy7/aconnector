@@ -16,7 +16,17 @@
         <a class="app" href="{{appl.app.launch_url}}">
             <span class="main">{{appl.app.name}}</span><br>
             <span class="secondary">Owned by {{appl.app.owner.username}}</span><br>
-            <span class="secondary">Allowed on {{appl.created_at.strftime("%Y-%m-%d %H:%M:%S")}}</span>
+            <span class="secondary">Allowed on {{appl.created_at.strftime("%Y-%m-%d %H:%M:%S")}}</span><br>
+            {% if appl.scopes | length > 0 %}
+                <span class="secondary">Permissions:</span><br>
+                {% for scope in appl.scopes.split() %}
+                {% if rscopes[scope] %}
+                <span class="tertiary">{{rscopes[scope]}}</span><br>
+                {% endif %}
+                {% endfor %}
+            {% else %}
+            <span class="secondary">No permissions requested</span>
+            {% endif %}
             <form class="action" action="/app/{{appl.app.client_id}}/revoke" method="post"><input type="submit" id="submit" value="Revoke access" style="margin: 0;"></form>{# I dislike needing to use a form here, but atleast it dosent use javascript! #}
         </a>
     {% endfor %}

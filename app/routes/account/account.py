@@ -3,12 +3,13 @@ from flask import redirect, render_template
 from app import app
 from app.types import request
 from app.utilities.users import require_user
+from app.utilities.ext import readable_scopes
 
 
 @app.route("/account")
 @require_user
 def account_page():
-    return render_template("account/account.html")
+    return render_template("account/account.html", rscopes=readable_scopes)
 
 
 @app.route("/account/namechange")

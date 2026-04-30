@@ -61,6 +61,10 @@ body {
 .user > .secondary {
     font-size: 0.7em;
 }
+.app > .tertiary,
+.user > .tertiary {
+    font-size: 0.55em;
+}
 a.app:hover,
 a.user:hover {
     background-color: hsl(150, 11%, 36%);
