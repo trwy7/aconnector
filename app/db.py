@@ -62,7 +62,7 @@ class User(db.Model):
         Boolean, nullable=False, default=False
     )
     allowed_apps: Mapped[str | None] = mapped_column(Text, nullable=True, default=None)
-    app_links: Mapped[list["UserAppLink"]] = relationship("UserAppLink", back_populates="user")
+    app_links: Mapped[list["UserAppLink"]] = relationship("UserAppLink", back_populates="user", cascade="all, delete-orphan")
 
     @staticmethod
     def create(email: str, username: str, name: str, disabled: bool = False):
@@ -180,7 +180,7 @@ class App(db.Model):
     launch_url: Mapped[str] = mapped_column(
         String(200), default="https://example.com/login/oidc"
     )
-    user_links: Mapped[list["UserAppLink"]] = relationship("UserAppLink", back_populates="app")
+    user_links: Mapped[list["UserAppLink"]] = relationship("UserAppLink", back_populates="app", cascade="all, delete-orphan")
     users = association_proxy("user_links", "user")
 
     @staticmethod
